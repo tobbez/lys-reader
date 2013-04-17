@@ -23,6 +23,8 @@ CREATE TABLE lysr_user_feed (
 CREATE TABLE lysr_feed_entry (
 	id BIGSERIAL PRIMARY KEY,
 	feed BIGINT NOT NULL REFERENCES lysr_feed (id) ON DELETE CASCADE,
+	guid TEXT NOT NULL,
+	content TEXT NOT NULL
 	-- feed contents
 );
 
