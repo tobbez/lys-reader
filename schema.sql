@@ -11,7 +11,7 @@ CREATE TABLE lysr_user_settings (
 
 CREATE TABLE lysr_feed (
 	id BIGSERIAL PRIMARY KEY,
-	url DATALINK UNIQUE
+	url TEXT UNIQUE
 );
 
 CREATE TABLE lysr_user_feed (
