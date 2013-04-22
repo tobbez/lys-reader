@@ -11,7 +11,9 @@ CREATE TABLE lysr_user_settings (
 
 CREATE TABLE lysr_feed (
 	id BIGSERIAL PRIMARY KEY,
-	url TEXT UNIQUE
+	url TEXT UNIQUE,
+	last_update TIMESTAMP,
+	update_interval INTERVAL
 );
 
 CREATE TABLE lysr_user_feed (
@@ -26,7 +28,6 @@ CREATE TABLE lysr_feed_entry (
 	title TEXT NOT NULL,
 	guid TEXT NOT NULL,
 	content TEXT NOT NULL
-	-- feed contents
 );
 
 CREATE TABLE lysr_feed_entry_status (
@@ -39,12 +40,12 @@ CREATE TABLE lysr_feed_entry_status (
 
 
 -- tags
-CREATE TABLE lysr_tag (
+CREATE TABLE lysr_feed_tag (
 	id BIGSERIAL PRIMARY KEY,
 	name TEXT
 );
 
-CREATE TABLE lysr_tag_assoc (
+CREATE TABLE lysr_feed_tag_assoc (
 	id BIGSERIAL PRIMARY KEY,
 	tag BIGINT REFERENCES lysr_tag (id) ON DELETE CASCADE,
 	feed BIGINT REFENECES lysr_user_feed (id) ON DELETE CASCADE
