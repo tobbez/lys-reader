@@ -80,6 +80,7 @@ class FeedHandler():
             self.update_feed(*feed)
 
     def handle_forever(self):
+        logging.info('Starting feed handler')
         while True:
             self.update_feeds()
             time.sleep(15)
