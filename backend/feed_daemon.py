@@ -3,6 +3,7 @@ import psycopg2
 import sys
 import configparser
 import logging
+import time
 
 class FeedHandler():
     def __init__(self):
@@ -70,7 +71,7 @@ class FeedHandler():
         self.con.commit()
 
 
-    def parse_feeds(self):
+    def update_feeds(self):
         cur = self.con.cursor()
         cur.execute('SELECT id, url FROM lysr_feed WHERE NOW() > last_check + update_interval')
         self.con.commit()
@@ -78,12 +79,15 @@ class FeedHandler():
         for feed in cur:
             self.update_feed(*feed)
 
+    def handle_forever(self):
+        while True:
+            self.update_feeds()
+            time.sleep(15)
 
 
 def main(args):
     fh = FeedHandler()
-    #fh.update_feed(1)
-    fh.parse_feeds()
+    fh.handle_forever()
 
 if __name__ == '__main__':
     main(sys.argv)
