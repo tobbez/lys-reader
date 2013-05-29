@@ -1,3 +1,13 @@
+DROP TABLE IF EXISTS lysr_feed_tag_assoc;
+DROP TABLE IF EXISTS lysr_feed_tag;
+DROP TABLE IF EXISTS lysr_feed_entry_status;
+DROP TABLE IF EXISTS lysr_feed_entry;
+DROP TABLE IF EXISTS lysr_user_feed;
+DROP TABLE IF EXISTS lysr_feed;
+DROP TABLE IF EXISTS lysr_user_settings;
+DROP TABLE IF EXISTS lysr_user;
+
+
 CREATE TABLE lysr_user (
 	id BIGSERIAL PRIMARY KEY,
 	email VARCHAR(255) UNIQUE,
@@ -6,7 +16,7 @@ CREATE TABLE lysr_user (
 
 CREATE TABLE lysr_user_settings (
 	id BIGSERIAL PRIMARY KEY,
-	user BIGINT NOT NULL REFERENCES lysr_user (id) ON DELETE CASCADE
+	"user" BIGINT NOT NULL REFERENCES lysr_user (id) ON DELETE CASCADE
 );
 
 CREATE TABLE lysr_feed (
@@ -19,7 +29,7 @@ CREATE TABLE lysr_feed (
 
 CREATE TABLE lysr_user_feed (
 	id BIGSERIAL PRIMARY KEY,
-	user BIGINT NOT NULL REFERENCES lysr_user (id) ON DELETE CASCADE,
+	"user" BIGINT NOT NULL REFERENCES lysr_user (id) ON DELETE CASCADE,
 	feed BIGINT NOT NULL REFERENCES lysr_feed (id) ON DELETE CASCADE
 );
 
@@ -33,7 +43,7 @@ CREATE TABLE lysr_feed_entry (
 
 CREATE TABLE lysr_feed_entry_status (
 	id BIGSERIAL PRIMARY KEY,
-	user BIGINT NOT NULL REFERENCES lysr_user (id) ON DELETE CASCADE,
+	"user" BIGINT NOT NULL REFERENCES lysr_user (id) ON DELETE CASCADE,
 	feed_entry BIGINT NOT NULL REFERENCES lysr_feed_entry (id) ON DELETE CASCADE,
 	read BOOLEAN,
 	starred BOOLEAN
@@ -48,7 +58,7 @@ CREATE TABLE lysr_feed_tag (
 
 CREATE TABLE lysr_feed_tag_assoc (
 	id BIGSERIAL PRIMARY KEY,
-	tag BIGINT REFERENCES lysr_tag (id) ON DELETE CASCADE,
-	feed BIGINT REFENECES lysr_user_feed (id) ON DELETE CASCADE
+	tag BIGINT REFERENCES lysr_feed_tag (id) ON DELETE CASCADE,
+	feed BIGINT REFERENCES lysr_user_feed (id) ON DELETE CASCADE
 );
 -- /tags
