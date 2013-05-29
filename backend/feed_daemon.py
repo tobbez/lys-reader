@@ -67,7 +67,7 @@ class FeedHandler():
         if new_entries:
             cur.execute('UPDATE lysr_feed SET last_update=NOW() WHERE id=%s', (feed_id,))
         else:
-            cur.execute('UPDATE lysr_feed SET update_interval=2*update_interval WHERE id=%s', (feed_id,))
+            cur.execute('''UPDATE lysr_feed SET update_interval=LEAST(1.5*update_interval, '7d'::interval) WHERE id=%s''', (feed_id,))
         self.con.commit()
 
 
