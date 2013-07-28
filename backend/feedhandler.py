@@ -1,9 +1,8 @@
 import feedparser
-import psycopg2
-import sys
 import configparser
 import logging
 import time
+from common.database import DB
 
 class FeedHandler():
     def __init__(self):
@@ -12,17 +11,7 @@ class FeedHandler():
     
         logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', level=logging.INFO)
         
-        self.con = None
-
-        try:
-            self.con = psycopg2.connect(
-                    database=self.config.get('database', 'database'), 
-                    user=self.config.get('database', 'user'),
-                    password=self.config.get('database', 'password'),
-                    host=self.config.get('database', 'host'), 
-                    async=False)
-        except psycopg2.OperationalError as e:
-            logging.error('Database: {}'.format(str(e).split('\n')[0]))
+        self.con = DB.connection
 
     def update_feed(self, feed_id, feed_url=None):
         if feed_url == None:
@@ -41,7 +30,7 @@ class FeedHandler():
                 cur = self.con.cursor()
     
                 for entry in feed.entries:
-                    # Bad HTML is removed by default :D
+                    # Bad HTML is removed by default
                     cur.execute('SELECT id FROM lysr_feed_entry WHERE feed = %s AND guid = %s', (feed_id, entry.link))
                     self.con.commit()
                
@@ -84,12 +73,3 @@ class FeedHandler():
         while True:
             self.update_feeds()
             time.sleep(15)
-
-
-def main(args):
-    fh = FeedHandler()
-    fh.handle_forever()
-
-if __name__ == '__main__':
-    main(sys.argv)
-
