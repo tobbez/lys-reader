@@ -15,8 +15,9 @@ def api_user_register():
 @app.route('/api/user/login', methods = ['POST'])
 def api_user_login():
     if 'email' in request.json and 'password' in request.json:
-        if login_user(request.json['email'], request.json['password']):
-            session['email'] = request.json['email']
+        id = check_user_credentials(request.json['email'], request.json['password'])
+        if id is not None:
+            session['id'] = id
             return make_response(jsonify({ 'status':'OK', 'message':'User logged in successfully'}), 200)
         else:
             return make_response(jsonify({ 'status':'FAIL', 'message':'Email and password combination did not match'}), 200)
@@ -24,8 +25,8 @@ def api_user_login():
 
 @app.route('/api/user/logout')
 def api_user_logout():
-    if 'email' in session:
-        session.pop('username', None)
+    if 'id' in session:
+        session.pop('id', None)
         return make_response(jsonify({ 'status':'OK', 'message':'User logged out successfully'}), 200)
 
     return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'User not logged in'}), 403)

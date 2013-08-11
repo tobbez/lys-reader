@@ -13,7 +13,7 @@ def register_user(email, password):
 
     return False
 
-def login_user(email, password):
+def check_user_credentials(email, password):
 
     if is_registered(email):
         con = DB.connection
@@ -23,9 +23,9 @@ def login_user(email, password):
         con.commit()
 
         if cur.rowcount is 1:
-            return True
+            return cur.fetchone()[0]
 
-        return False
+        return None
 
 def is_registered(email):
     con = DB.connection
