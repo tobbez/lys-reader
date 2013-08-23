@@ -59,6 +59,7 @@ CREATE TABLE lysr_feed_tag (
 CREATE TABLE lysr_feed_tag_assoc (
 	id BIGSERIAL PRIMARY KEY,
 	tag BIGINT REFERENCES lysr_feed_tag (id) ON DELETE CASCADE,
+	"user" BIGINT NOT NULL REFERENCES lysr_user (id) ON DELETE CASCADE,
 	feed BIGINT REFERENCES lysr_user_feed (id) ON DELETE CASCADE
 );
 -- /tags
