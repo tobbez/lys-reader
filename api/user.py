@@ -1,4 +1,6 @@
+from flask import make_response, jsonify, session
 from common.database import DB
+from functools import wraps
 
 def register_user(email, password):
 
@@ -38,3 +40,13 @@ def is_registered(email):
         return False
 
     return True
+
+# Wrappers
+
+def require_loggedin(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not 'loggedin' in session or not session['loggedin']:
+            return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'User not logged in'}), 403)
+        return f(*args, **kwargs)
+    return decorated_function

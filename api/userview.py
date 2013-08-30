@@ -17,16 +17,20 @@ def api_user_login():
     if 'email' in request.json and 'password' in request.json:
         id = check_user_credentials(request.json['email'], request.json['password'])
         if id is not None:
+            session = app.open_session(request)
             session['id'] = id
-            return make_response(jsonify({ 'status':'OK', 'message':'User logged in successfully'}), 200)
+            session['loggedin'] = True
+            response = make_response(jsonify({ 'status':'OK', 'message':'User logged in successfully'}), 200)
+            app.save_session(session, response)
         else:
-            return make_response(jsonify({ 'status':'FAIL', 'message':'Email and password combination did not match'}), 200)
+             response = make_response(jsonify({ 'status':'FAIL', 'message':'Email and password combination did not match'}), 200)
+        return response
     return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'Missing parameters'}), 400)
 
 @app.route('/api/user/logout')
+@require_loggedin
 def api_user_logout():
-    if 'id' in session:
-        session.pop('id', None)
-        return make_response(jsonify({ 'status':'OK', 'message':'User logged out successfully'}), 200)
+    session.destroy()
+    response = make_response(jsonify({ 'status':'OK', 'message':'User logged out successfully'}), 200)
+    return response
 
-    return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'User not logged in'}), 403)
