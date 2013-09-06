@@ -1,1 +1,1 @@
-SECREY_KEY=''
+SECRET_KEY=  ''
