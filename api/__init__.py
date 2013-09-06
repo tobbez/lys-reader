@@ -1,11 +1,14 @@
 from flask import Flask
-from simplekv.memory import DictStore
+from simplekv.fs import FilesystemStore
 from flaskext.kvsession import KVSessionExtension
 
-# Use DictStore until the code is ready for production
-store = DictStore()
+store = FilesystemStore('session')
+
 app = Flask(__name__)
-app.secret_key = ''
+
+app.config.from_pyfile('../config.defaults.py')
+app.config.from_pyfile('../config.py')
+app.secret_key = app.config['SECRET_KEY']
 
 KVSessionExtension(store, app)
 

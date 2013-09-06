@@ -1,5 +1,5 @@
 from flask import make_response, jsonify, session
-from common.database import DB
+from common import DB
 from functools import wraps
 
 def register_user(email, password):
@@ -12,7 +12,6 @@ def register_user(email, password):
         con.commit()
 
         return True
-
     return False
 
 def check_user_credentials(email, password):
