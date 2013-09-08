@@ -1,9 +1,8 @@
 from psycopg2.pool import ThreadedConnectionPool
 import logging
-from common import config
 
 class Database():
-    def __init__(self):
+    def __init__(self, config):
         logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', level=logging.INFO)
 
         self._pool = ThreadedConnectionPool(1, 10, 
