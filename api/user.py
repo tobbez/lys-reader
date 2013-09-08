@@ -5,7 +5,7 @@ from functools import wraps
 def register_user(email, password):
 
     if not is_registered(email):
-        con = DB.connection
+        con = DB.get_connection()
         cur = con.cursor()
 
         cur.execute('INSERT INTO lysr_user (email, password) VALUES (%s, %s)', (email, password))
@@ -17,7 +17,7 @@ def register_user(email, password):
 def check_user_credentials(email, password):
 
     if is_registered(email):
-        con = DB.connection
+        con = DB.get_connection()
         cur = con.cursor()
 
         cur.execute('SELECT id FROM lysr_user WHERE email = %s and password = %s', (email, password))
@@ -29,7 +29,7 @@ def check_user_credentials(email, password):
         return None
 
 def is_registered(email):
-    con = DB.connection
+    con = DB.get_connection()
     cur = con.cursor()
 
     cur.execute('SELECT id FROM lysr_user WHERE email = %s', (email,))
