@@ -1,6 +1,6 @@
 from flask import make_response, jsonify, session
-from common import DB
 from functools import wraps
+from api import DB
 
 def register_user(email, password):
 

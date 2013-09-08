@@ -2,16 +2,14 @@ import feedparser
 import configparser
 import logging
 import time
-from common import DB
+from common import Database, get_config
 
 class FeedHandler():
     def __init__(self):
-        self.config = configparser.ConfigParser(interpolation=None)
-        self.config.read(('config.ini',))
-    
         logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s', level=logging.INFO)
-        
-        self.con = DB.get_connection()
+        config   = get_config()
+        self.DB  = Database(config)
+        self.con = self.DB.get_connection()
 
     def update_feed(self, feed_id, feed_url=None):
         if feed_url == None:
