@@ -1,4 +1,2 @@
-from common.config import config
+from common.config import get_config
 from common.database import Database
-
-DB = Database()
