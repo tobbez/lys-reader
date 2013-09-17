@@ -30,7 +30,8 @@ CREATE TABLE lysr_feed (
 CREATE TABLE lysr_user_feed (
 	id BIGSERIAL PRIMARY KEY,
 	"user" BIGINT NOT NULL REFERENCES lysr_user (id) ON DELETE CASCADE,
-	feed BIGINT NOT NULL REFERENCES lysr_feed (id) ON DELETE CASCADE
+	feed BIGINT NOT NULL REFERENCES lysr_feed (id) ON DELETE CASCADE,
+	name TEXT NOT NULL
 );
 
 CREATE TABLE lysr_feed_entry (
