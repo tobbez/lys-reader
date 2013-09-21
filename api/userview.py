@@ -1,4 +1,5 @@
 from flask import abort, request, jsonify, make_response, session
+from datetime import datetime, timedelta
 from api import app
 from api.user import *
 
@@ -29,8 +30,20 @@ def api_user_login():
 
 @app.route('/api/user/logout')
 @require_loggedin
+@require_csrf_token
 def api_user_logout():
     session.destroy()
     response = make_response(jsonify({ 'status':'OK', 'message':'User logged out successfully'}), 200)
+    return response
+
+@app.route('/api/user/status')
+@require_loggedin
+def api_user_status():
+    token = generate_csrf_token()
+    expire_time = datetime.now() + timedelta(minutes=5)
+
+    session['csrf'] = token
+    session['csrf_expire'] = expire_time
+    response = make_response(jsonify({'csrf_token':token, 'unread': 0}), 200)
     return response
 
