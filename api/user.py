@@ -52,7 +52,7 @@ def require_loggedin(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not 'loggedin' in session or not session['loggedin']:
-            return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'User not logged in'}), 403)
+            return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'User not logged in'}), 400)
         return f(*args, **kwargs)
     return decorated_function
 
@@ -60,7 +60,7 @@ def require_csrf_token(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not 'csrf' in session or datetime.now() > session['csrf_expire']:
-            return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'csrf token invalid'}), 403)
+            return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'csrf token invalid'}), 400)
         session.pop('csrf', None)
         session.pop('csrf_expire', None)
         return f(*args, **kwargs)
