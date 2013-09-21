@@ -1,5 +1,8 @@
 from flask import make_response, jsonify, session
 from functools import wraps
+from os import urandom
+from datetime import datetime, timedelta
+from base64 import b64encode
 from api import DB
 
 def register_user(email, password):
@@ -40,6 +43,9 @@ def is_registered(email):
 
     return True
 
+def generate_csrf_token():
+    return b64encode(urandom(30))
+
 # Wrappers
 
 def require_loggedin(f):
@@ -49,3 +55,14 @@ def require_loggedin(f):
             return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'User not logged in'}), 403)
         return f(*args, **kwargs)
     return decorated_function
+
+def require_csrf_token(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not 'csrf' in session or datetime.now() > session['csrf_expire']:
+            return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'csrf token invalid'}), 403)
+        session.pop('csrf', None)
+        session.pop('csrf_expire', None)
+        return f(*args, **kwargs)
+    return decorated_function
+
