@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from api import app
 from api.user import *
 
-@app.route('/api/register', methods = ['POST'])
-def api_user_register():
+@app.route('/api/signup', methods = ['POST'])
+def api_user_signup():
     if 'email' in request.json and 'password' in request.json:
         if register_user(request.json['email'], request.json['password']):
             return make_response(jsonify({ 'status':'OK', 'message':'User account created'}), 200)
