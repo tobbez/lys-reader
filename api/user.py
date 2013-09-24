@@ -1,4 +1,4 @@
-from flask import make_response, jsonify, session
+from flask import make_response, jsonify, session, request
 from functools import wraps
 from os import urandom
 from datetime import datetime, timedelta
@@ -73,10 +73,10 @@ def require_csrf_token(f):
     def decorated_function(*args, **kwargs):
         if not 'csrf' in session or not 'csrf_token' in request.json \
             or session['csrf'] != request.json['csrf_token'] or datetime.now() > session['csrf_expire']:
-            generate_csrf_token()
+            generate_csrf_token(session)
             return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'csrf token invalid'}), 400)
 
-        generate_csrf_token()
+        generate_csrf_token(session)
         kwargs['csrf'] = session['csrf']
 
         return f(*args, **kwargs)
