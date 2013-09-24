@@ -36,11 +36,10 @@ def api_user_logout():
     response = make_response(jsonify({ 'status': 'OK', 'message': 'User logged out successfully'}), 200)
     return response
 
-@app.route('/api/status/')
-@require_authentication
-def api_user_status():
+@app.route('/api/')
+def api_root():
     generate_csrf_token(session)
 
-    response = make_response(jsonify({'csrf_token': session['csrf'], 'unread': get_unread(session['id'])}), 200)
+    response = make_response(jsonify({'csrf_token': session['csrf']}), 200)
     return response
 
