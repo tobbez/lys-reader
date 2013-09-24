@@ -46,6 +46,15 @@ def is_registered(email):
 def generate_csrf_token():
     return b64encode(urandom(30))
 
+def get_unread(id):
+    con = DB.get_connection()
+    cur = con.cursor()
+
+    cur.execute('SELECT COUNT(*) FROM lysr_feed_entry_status WHERE read = FALSE and id = %s;', (id,))
+    con.commit()
+
+    return cur.fetchone()[0]
+
 # Wrappers
 
 def require_loggedin(f):

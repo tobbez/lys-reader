@@ -40,10 +40,12 @@ def api_user_logout():
 @require_loggedin
 def api_user_status():
     token = generate_csrf_token()
+    unread = get_unread(session['id'])
     expire_time = datetime.now() + timedelta(minutes=5)
 
     session['csrf'] = token
     session['csrf_expire'] = expire_time
+
     response = make_response(jsonify({'csrf_token':token, 'unread': 0}), 200)
     return response
 
