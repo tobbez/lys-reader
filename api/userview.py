@@ -39,13 +39,8 @@ def api_user_logout():
 @app.route('/api/status')
 @require_authentication
 def api_user_status():
-    token = generate_csrf_token()
-    unread = get_unread(session['id'])
-    expire_time = datetime.now() + timedelta(minutes=5)
+    generate_csrf_token(session)
 
-    session['csrf'] = token
-    session['csrf_expire'] = expire_time
-
-    response = make_response(jsonify({'csrf_token':token, 'unread': 0}), 200)
+    response = make_response(jsonify({'csrf_token': session['csrf'], 'unread': get_unread(session['id'])}), 200)
     return response
 

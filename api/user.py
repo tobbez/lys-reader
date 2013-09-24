@@ -43,8 +43,11 @@ def is_registered(email):
 
     return True
 
-def generate_csrf_token():
-    return b64encode(urandom(30))
+def generate_csrf_token(session):
+    expire_time = datetime.now() + timedelta(minutes=15)
+    token = b64encode(urandom(30))
+    session['csrf'] = token
+    session['csrf_expire'] = expire_time
 
 def get_unread(id):
     con = DB.get_connection()
@@ -55,7 +58,7 @@ def get_unread(id):
 
     return cur.fetchone()[0]
 
-# Wrappers
+# Decorators
 
 def require_authentication(f):
     @wraps(f)
@@ -68,10 +71,14 @@ def require_authentication(f):
 def require_csrf_token(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not 'csrf' in session or datetime.now() > session['csrf_expire']:
+        if not 'csrf' in session or not 'csrf_token' in request.json \
+            or session['csrf'] != request.json['csrf_token'] or datetime.now() > session['csrf_expire']:
+            generate_csrf_token()
             return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'csrf token invalid'}), 400)
-        session.pop('csrf', None)
-        session.pop('csrf_expire', None)
+
+        generate_csrf_token()
+        kwargs['csrf'] = session['csrf']
+
         return f(*args, **kwargs)
     return decorated_function
 
