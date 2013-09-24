@@ -57,7 +57,7 @@ def get_unread(id):
 
 # Wrappers
 
-def require_loggedin(f):
+def require_authentication(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not 'loggedin' in session or not session['loggedin']:

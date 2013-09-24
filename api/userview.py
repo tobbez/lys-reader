@@ -29,7 +29,7 @@ def api_user_login():
     return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'Missing parameters'}), 400)
 
 @app.route('/api/logout')
-@require_loggedin
+@require_authentication
 @require_csrf_token
 def api_user_logout():
     session.destroy()
@@ -37,7 +37,7 @@ def api_user_logout():
     return response
 
 @app.route('/api/status')
-@require_loggedin
+@require_authentication
 def api_user_status():
     token = generate_csrf_token()
     unread = get_unread(session['id'])
