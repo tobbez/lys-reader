@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from api import app
 from api.user import *
 
-@app.route('/api/signup', methods = ['POST'])
+@app.route('/api/signup/', methods = ['POST'])
 def api_user_signup():
     if 'email' in request.json and 'password' in request.json:
         if register_user(request.json['email'], request.json['password']):
@@ -13,7 +13,7 @@ def api_user_signup():
 
     return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'Missing parameters'}), 400)
 
-@app.route('/api/login', methods = ['POST'])
+@app.route('/api/login/', methods = ['POST'])
 def api_user_login():
     if 'email' in request.json and 'password' in request.json:
         id = check_user_credentials(request.json['email'], request.json['password'])
@@ -28,7 +28,7 @@ def api_user_login():
         return response
     return make_response(jsonify({ 'status':'BAD REQUEST', 'message':'Missing parameters'}), 400)
 
-@app.route('/api/logout')
+@app.route('/api/logout/')
 @require_authentication
 @require_csrf_token
 def api_user_logout():
@@ -36,7 +36,7 @@ def api_user_logout():
     response = make_response(jsonify({ 'status':'OK', 'message':'User logged out successfully'}), 200)
     return response
 
-@app.route('/api/status')
+@app.route('/api/status/')
 @require_authentication
 def api_user_status():
     generate_csrf_token(session)
