@@ -1,0 +1,588 @@
+lys-reader API specification
+============================
+Torbjörn Lönnemark <tobbez@ryara.net>
+:toc2:
+:theme: volnitsky
+
+:numbered:
+== General
+
+=== Encoding
+All responses and POST parameters are encoded as JSON.
+
+=== Authentication
+Cookies are used for authentication.
+
+=== CSRF protection
+Since the CSRF token changes every time it is used, the new token is returned in the response for all endpoints that use it. This is done to decrease the number of requests required to interact with the API.
+
+== Endpoints
+
+:numbered:
+=== /api/
+:numbered!:
+Returns a CSRF token.
+
+==== Method
+GET.
+
+==== Parameters
+None.
+
+==== Returned keys
+ * csrf_token
+ * status
+ ** code
+ ** message
+
+==== Example
+===== Query
+[source,sh]
+curl http://server/api/
+
+===== Response
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "csrf_token": "oEDe3EI+Xk4YZOgSXjyy7qg/CKB2Tj9d5mWwhXeD",
+    "status": {
+        "code": 0,
+        "message": "Success"
+    }
+}
+----
+
+
+:numbered:
+=== /api/signup/
+:numbered!:
+Creates an account.
+
+==== Method
+POST.
+
+==== Parameters
+ * csrf_token
+ * email
+ * password
+
+==== Returned keys
+ * csrf_token
+ * status
+ ** code
+ ** message
+
+==== Example
+===== Query
+[source,sh]
+curl -X POST --data \
+"{\"csrf_token\": \"oEDe3EI+Xk4YZOgSXjyy7qg/CKB2Tj9d5mWwhXeD\", \
+\"email\": \"user@example.com\", \"password\": \"A5cFi\"}" http://server/api/signup/
+
+===== Response
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "csrf_token": "vj+VbngMRqkehnPmKuBrYmwG6ZPJW3TG6ql5kU5j",
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    }
+}
+----
+
+:numbered:
+=== /api/login/
+:numbered!:
+Logs into an account.
+
+==== Method
+POST.
+
+==== Parameters
+ * csrf_token
+ * email
+ * password
+
+==== Returned keys
+ * csrf_token
+ * status
+ ** code
+ ** message
+
+==== Example
+===== Query
+[source,sh]
+curl -X POST --data "{\"csrf_token\": \"OAKbg0gAc/ltrUTdyGl0VUBL0L0mN/RjqvlbzEV0\", \"email\": \"user@example.com\" \
+\"password\":\"A5cFi\"}" http://server/api/login/
+
+===== Response
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "csrf_token": "2T1upz4FCNHATKe+WAMro0i4Z0KAZ/KfjpyQXHNB",
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    }
+}
+----
+
+
+:numbered:
+=== /api/feed/(param:value/)+
+:numbered!:
+Returns entries for a feed or a number of according to the parameters provided.
+
+==== Method
+GET.
+
+==== Parameters
+[horizontal]
+id:: A comma-separated list of one or more feed IDs. Only fetch entries from the specified feeds.
+tag:: A comma-separated list of one or more tag names. Only fetch entries from feeds with the specified tags.
+filter:: To be decided.
+group:: +feed+, +tag+, or +none+. +feed+ groups the returned entries by feed, and +tag+ groups them by tag. +none+ performs no grouping. The default is none.
+
+==== Returned keys
+ * status
+ ** code
+ ** message
+ * entries
+
+==== Examples
+===== Query 1
+[source,sh]
+curl http://server/api/feed/
+
+===== Response 1
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    },
+    "entries": [
+        {
+            "id": 37,
+            "title": "A post title",
+            "feed": 43,
+            "content": "This is a post with some content",
+            "tags": ["programming"],
+            "read": false,
+            "starred": true,
+            "created": "2013-09-21T17:43:42.637118",
+            "changed": "2013-09-21T17:43:42.637118"
+        },
+        {
+            "id": 58,
+            "title": "Some other post's title",
+            "feed": 79,
+            "content": "This is a post with some content",
+            "tags": ["programming", "code"],
+            "read": true,
+            "starred": false,
+            "created": "2013-09-21T17:43:42.637118",
+            "changed": "2013-09-21T17:43:42.637118"
+        }
+    ]
+}
+----
+
+===== Query 2
+[source,sh]
+curl http://server/api/feed/id:37/
+
+===== Response 2
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    },
+    "entries": [
+        {
+            "id": 37,
+            "title": "A post title",
+            "feed": 43,
+            "content": "This is a post with some content",
+            "tags": ["programming"],
+            "read": false,
+            "starred": true,
+            "created": "2013-09-21T17:43:42.637118",
+            "changed": "2013-09-21T17:43:42.637118"
+        }
+   ]
+}
+----
+
+===== Query 3
+[source,sh]
+curl http://server/api/feed/tag:code/
+
+===== Response 3
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    },
+    "entries": [
+        {
+            "id": 58,
+            "title": "Some other post's title",
+            "feed": 79,
+            "content": "This is a post with some content",
+            "tags": ["programming", "code"],
+            "read": true,
+            "starred": false,
+            "created": "2013-09-21T17:43:42.637118",
+            "changed": "2013-09-21T17:43:42.637118"
+        }
+    ]
+}
+----
+
+===== Query 4
+[source,sh]
+curl http://server/api/feed/group:feed/
+
+===== Response 4
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    },
+    "entries": {
+        "43": {
+            "name": "Some feed",
+            "entries": [
+                {
+                    "id": 37,
+                    "title": "A post title",
+                    "feed": 43,
+                    "content": "This is a post with some content",
+                    "tags": ["programming"],
+                    "read": false,
+                    "starred": true,
+                    "created": "2013-09-21T17:43:42.637118",
+                    "changed": "2013-09-21T17:43:42.637118"
+                }
+            ]
+        },
+        "79": {
+            "name": "Some other feed",
+            "entries": [
+                {
+                    "id": 58,
+                    "title": "Some other post's title",
+                    "feed": 79,
+                    "content": "This is a post with some content",
+                    "tags": ["programming", "code"],
+                    "read": true,
+                    "starred": false,
+                    "created": "2013-09-21T17:43:42.637118",
+                    "changed": "2013-09-21T17:43:42.637118"
+                }
+
+            ]
+        }
+    }
+}
+----
+
+===== Query 5
+[source,sh]
+curl http://server/api/feed/group:tag/
+
+===== Response 5
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    },
+    "entries": {
+        "code": [
+            {
+                "id": 58,
+                "title": "Some other post's title",
+                "feed": 79,
+                "content": "This is a post with some content",
+                "tags": ["programming", "code"],
+                "read": true,
+                "starred": false,
+                "created": "2013-09-21T17:43:42.637118",
+                "changed": "2013-09-21T17:43:42.637118"
+            }
+        ],
+        "programming": [
+            {
+                "id": 37,
+                "title": "A post title",
+                "feed": 43,
+                "content": "This is a post with some content",
+                "tags": ["programming"],
+                "read": false,
+                "starred": true,
+                "created": "2013-09-21T17:43:42.637118",
+                "changed": "2013-09-21T17:43:42.637118"
+            },
+            {
+                "id": 58,
+                "title": "Some other post's title",
+                "feed": 79,
+                "content": "This is a post with some content",
+                "tags": ["programming", "code"],
+                "read": true,
+                "starred": false,
+                "created": "2013-09-21T17:43:42.637118",
+                "changed": "2013-09-21T17:43:42.637118"
+            }
+       ]
+    }
+}
+----
+
+
+:numbered:
+=== /api/feed/id:feed_id/
+:numbered!:
+Changes feed settings or unsubscribes.
+
+==== Method
+POST.
+
+==== Parameters
+ * csrf_token (required)
+ * subscribed (optional)
+ * name (optional)
+ * tags (optional)
+
+==== Returned keys
+ * csrf_token
+ * status
+ ** code
+ ** message
+
+==== Example
+===== Query
+[source,sh]
+curl -X POST --data \
+"{\"csrf_token\": \"ZirUnlgQ1kb8HjDCknjpS6KKXMaZdalYdrNp1FH6\", \
+\"name\": \"New feed name\", \"tags\": [\"tag a\", \"tag b\"]}' \
+http://server/api/feed/id:43/
+
+===== Response
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "csrf_token": "823uAOlq+ir66U2S99CZ779av7/i5L/2VkI2YHJr",
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    }
+}
+----
+
+:numbered:
+=== /api/entry/id:entry_id/
+:numbered!:
+Returns the specified feed entry.
+
+==== Method
+GET.
+
+==== Parameters
+[horizontal]
+entry_id:: ID of the desired entry.
+
+==== Returned keys
+ * entry
+ * status
+ ** code
+ ** message
+
+==== Example
+===== Query
+[source,sh]
+curl http://server/api/entry/id:58/
+
+===== Response
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    },
+    "entry": {
+        "id": 58,
+        "title": "Some other post's title",
+        "feed": 79,
+        "content": "This is a post with some content",
+        "tags": ["programming", "code"],
+        "read": true,
+        "starred": false,
+        "created": "2013-09-21T17:43:42.637118",
+        "changed": "2013-09-21T17:43:42.637118"
+    }
+}
+----
+
+:numbered:
+=== /api/entry/id:entry_id/
+:numbered!:
+Changes attributes of the specified entry.
+
+==== Method
+POST.
+
+==== Parameters
+ * csrf_token (required)
+ * read (optional)
+ * starred (optional)
+
+==== Returned keys
+ * csrf_token
+ * status
+ ** code
+ ** message
+
+==== Example
+===== Query
+[source,sh]
+curl -X POST --data \
+"{\"csrf_token\": \"S1l86/ghgz8cQ6znmKDx4//SzBQ1PGYGjvY+kII5XQkusVxx\", \
+\"read\": true, \"starred\": false}" http://server/api/entry/id:58/
+
+===== Response
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "csrf_token": "KHsy1/XjtMruhBiZjFaKgD0MrOwk0i6jOSj/aYNpxtCy46nV",
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    }
+}
+----
+
+
+:numbered:
+=== /api/subscribe/
+:numbered!:
+Subscribes to a feed.
+
+==== Method
+POST.
+
+==== Parameters
+ * csrf_token
+ * url
+
+==== Returned keys
+ * csrf_token
+ * feed_id
+ * status
+ ** code
+ ** message
+
+==== Example
+===== Query
+[source,sh]
+curl -X POST --data \
+"{\"csrf_token\": \"PZ0R6NM2MM1+AhrBhyRH5odsJlwlDhHwCJ8/xiy4HYOdqmOv\", \
+\"url\": \"http://example.com/feed.rss\"}" http://server/api/subscribe/
+
+===== Response
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "csrf_token": "mZVYMLKIIp088+gDNgNNCXF9XfMlRuMGddsrN7+bJNisgmjn",
+    "feed_id": 9083,
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    }
+}
+----
+
+
+:numbered:
+=== /api/settings/
+:numbered!:
+Retrieves all settings.
+
+==== Method
+GET.
+
+==== Parameters
+None.
+
+==== Returned keys
+ * status
+ ** code
+ ** message
+ * settings
+
+==== Example.
+===== Query
+[source,sh]
+curl http://server/api/settings/
+
+===== Response
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "settings": {
+        // No settings yet
+    },
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    }
+}
+----
+
+:numbered:
+=== /api/settings/
+:numbered!:
+Changes settings.
+
+==== Method
+POST.
+
+==== Parameters
+ * csrf_token
+ * settings
+
+==== Returned keys
+ * csrf_token
+ * status
+
+==== Example
+==== Query
+[source,sh]
+curl -X POST --data \
+"{\"csrf_token\": \"2QMBqEz4rm615XoZ4K2PuA5yCAlt6Bkx8egyjdUTLROSNwdU\", \
+\"settings\": {\"setting1\": \"new value\", \"setting2\": 3123}}' \
+http://server/api/settings/
+
+==== Response
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "csrf_token": "JS4olFfOM0YIRnHzAFIUQZbeMBDLqvq72QT2p2sx5dS7kAcR",
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    }
+}
+----
