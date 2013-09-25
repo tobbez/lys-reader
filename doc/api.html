@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="generator" content="AsciiDoc 8.6.7">
+<title>lys-reader API specification</title>
+<style type="text/css">
+/*
+ * AsciiDoc 'volnitsky' theme for xhtml11 and html5 backends.
+ * Based on css from http://volnitsky.com, which was in turn based on default
+ * theme from AsciiDoc
+ *
+ * FIXME: The styling is still a bit rough in places.
+ *
+ */
+
+/* Default font. */
+body {
+  font-family: Georgia,"Times New Roman",Times,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Candara,Arial,sans-serif;
+}
+
+
+#toc a {
+    border-bottom: 1px dotted #999999;
+    color: #3A3A4D !important;
+    text-decoration: none !important;
+}
+#toc a:hover {
+    border-bottom: 1px solid #6D4100;
+    color: #6D4100 !important;
+    text-decoration: none !important;
+}
+a { color: #666688; text-decoration: none; border-bottom: 1px dotted #666688; }
+a:visited { color: #615FA0; border-bottom: 1px dotted #615FA0; }
+a:hover { color: #6D4100; border-bottom: 1px solid #6D4100; }
+
+em {
+  font-style: italic;
+  color: #444466;
+}
+
+strong {
+  font-weight: bold;
+  color: #444466;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #666688;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+  letter-spacing:+0.15em;
+}
+
+h1, h2, h3 { border-bottom: 2px solid #ccd; }
+h2 { padding-top: 0.5em; }
+h3 { float: left; }
+h3 + * { clear: left; }
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid #444466;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+#author {
+  color: #444466;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+div.admonitionblock {
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #444466;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock {
+  padding-left: 2.0em;
+  margin-right: 10%;
+}
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock {
+  padding-left: 2.0em;
+  margin-right: 10%;
+}
+div.verseblock > pre.content {
+  font-family: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #444466;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 2px solid silver;
+}
+
+div.exampleblock > div.content {
+  border-left: 2px solid silver;
+  padding: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: #444466;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+div.tableblock > table {
+  border: 3px solid #444466;
+}
+thead {
+  font-weight: bold;
+  color: #444466;
+}
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: #444466;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toctitle {
+  color: #666688;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 { margin-top: 0; margin-bottom: 0; }
+div.toclevel1 { margin-top: 0.3em; margin-left: 0; font-size: 1.0em; }
+div.toclevel2 { margin-top: 0.25em; margin-left: 2em; font-size: 0.9em; }
+div.toclevel3 { margin-left: 4em; font-size: 0.8em; }
+div.toclevel4 { margin-left: 6em; font-size: 0.8em; }
+
+body {
+  margin: 1em 5%;
+  max-width:  55em;
+  padding-left: 0;
+
+}
+
+.monospaced, tt, div.listingblock > div.content {
+  font-family:  Consolas, "Andale Mono", "Courier New", monospace;
+  color: #004400;
+  background: #f4f4f4;
+  max-width: 80em;
+  line-height: 1.2em;
+}
+
+.paragraph p  {
+  line-height: 1.5em;
+  margin-top: 1em;
+}
+
+.paragraph p, li, dd, .content { max-width: 45em; }
+.admonitionblock               { max-width: 35em; }
+
+div.sectionbody div.ulist > ul > li {
+  list-style-type: square;
+  color: #aaa;
+}
+  div.sectionbody div.ulist >  ul > li > * {
+    color: black;
+    /*font-size: 50%;*/
+  }
+
+
+div.sectionbody div.ulist > ul > li div.ulist > ul > li {
+  color: #ccd ;
+}
+  div.sectionbody div.ulist > ul > li div.ulist > ul > li > * {
+    color: black ;
+  }
+
+em {
+  font-style: normal ! important;
+  font-weight: bold ! important;
+  color: #662222   ! important;
+  letter-spacing:+0.08em ! important;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #666688;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #444466;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #444466;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+@media screen {
+  body {
+    max-width: 50em; /* approximately 80 characters wide */
+    margin-left: 16em;
+  }
+
+  #toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 13em;
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+    margin: 0;
+    overflow: auto;
+    border-right: 3px solid #f8f8f8;
+    background-color: white;
+  }
+
+  #toc .toclevel1 {
+    margin-top: 0.5em;
+  }
+
+  #toc .toclevel2 {
+    margin-top: 0.25em;
+    display: list-item;
+    color: #aaaaaa;
+  }
+
+  #toctitle {
+    margin-top: 0.5em;
+  }
+}
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([2-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install(2);
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>lys-reader API specification</h1>
+<span id="author">Torbjörn Lönnemark</span><br>
+<span id="email" class="monospaced">&lt;<a href="mailto:tobbez@ryara.net">tobbez@ryara.net</a>&gt;</span><br>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_general">1. General</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_encoding">1.1. Encoding</h3>
+<div class="paragraph"><p>All responses and POST parameters are encoded as JSON.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_authentication">1.2. Authentication</h3>
+<div class="paragraph"><p>Cookies are used for authentication.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_csrf_protection">1.3. CSRF protection</h3>
+<div class="paragraph"><p>Since the CSRF token changes every time it is used, the new token is returned in the response for all endpoints that use it. This is done to decrease the number of requests required to interact with the API.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_endpoints">2. Endpoints</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_api">2.1. /api/</h3>
+<div class="paragraph"><p>Returns a CSRF token.</p></div>
+<div class="sect3">
+<h4 id="_method">Method</h4>
+<div class="paragraph"><p>GET.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_parameters">Parameters</h4>
+<div class="paragraph"><p>None.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_returned_keys">Returned keys</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+<li>
+<p>
+status
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+code
+</p>
+</li>
+<li>
+<p>
+message
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_example">Example</h4>
+<div class="sect4">
+<h5 id="_query">Query</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl http<span style="color: #990000">:</span>//server/api<span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response">Response</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">csrf_token</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">oEDe3EI+Xk4YZOgSXjyy7qg/CKB2Tj9d5mWwhXeD</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">message</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_signup">2.2. /api/signup/</h3>
+<div class="paragraph"><p>Creates an account.</p></div>
+<div class="sect3">
+<h4 id="_method_2">Method</h4>
+<div class="paragraph"><p>POST.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_parameters_2">Parameters</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+<li>
+<p>
+email
+</p>
+</li>
+<li>
+<p>
+password
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_returned_keys_2">Returned keys</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+<li>
+<p>
+status
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+code
+</p>
+</li>
+<li>
+<p>
+message
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_example_2">Example</h4>
+<div class="sect4">
+<h5 id="_query_2">Query</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl -X POST --data <span style="color: #990000">\</span>
+<span style="color: #FF0000">"{</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">csrf_token</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">oEDe3EI+Xk4YZOgSXjyy7qg/CKB2Tj9d5mWwhXeD</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, \</span>
+<span style="color: #CC33CC">\"</span><span style="color: #FF0000">email</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">user@example.com</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">password</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">A5cFi</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">}"</span> http<span style="color: #990000">:</span>//server/api/signup<span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_2">Response</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">csrf_token</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">vj+VbngMRqkehnPmKuBrYmwG6ZPJW3TG6ql5kU5j</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_login">2.3. /api/login/</h3>
+<div class="paragraph"><p>Logs into an account.</p></div>
+<div class="sect3">
+<h4 id="_method_3">Method</h4>
+<div class="paragraph"><p>POST.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_parameters_3">Parameters</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+<li>
+<p>
+email
+</p>
+</li>
+<li>
+<p>
+password
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_returned_keys_3">Returned keys</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+<li>
+<p>
+status
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+code
+</p>
+</li>
+<li>
+<p>
+message
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_example_3">Example</h4>
+<div class="sect4">
+<h5 id="_query_3">Query</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl -X POST --data <span style="color: #FF0000">"{</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">csrf_token</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">OAKbg0gAc/ltrUTdyGl0VUBL0L0mN/RjqvlbzEV0</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">email</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">user@example.com</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000"> \</span>
+<span style="color: #CC33CC">\"</span><span style="color: #FF0000">password</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">:</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">A5cFi</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">}"</span> http<span style="color: #990000">:</span>//server/api/login<span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_3">Response</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">csrf_token</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2T1upz4FCNHATKe+WAMro0i4Z0KAZ/KfjpyQXHNB</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_feed_param_value">2.4. /api/feed/(param:value/)+</h3>
+<div class="paragraph"><p>Returns entries for a feed or a number of according to the parameters provided.</p></div>
+<div class="sect3">
+<h4 id="_method_4">Method</h4>
+<div class="paragraph"><p>GET.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_parameters_4">Parameters</h4>
+<div class="hdlist"><table>
+<tr>
+<td class="hdlist1">
+id
+<br>
+</td>
+<td class="hdlist2">
+<p style="margin-top: 0;">
+A comma-separated list of one or more feed IDs. Only fetch entries from the specified feeds.
+</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+tag
+<br>
+</td>
+<td class="hdlist2">
+<p style="margin-top: 0;">
+A comma-separated list of one or more tag names. Only fetch entries from feeds with the specified tags.
+</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+filter
+<br>
+</td>
+<td class="hdlist2">
+<p style="margin-top: 0;">
+To be decided.
+</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+group
+<br>
+</td>
+<td class="hdlist2">
+<p style="margin-top: 0;">
+<span class="monospaced">feed</span>, <span class="monospaced">tag</span>, or <span class="monospaced">none</span>. <span class="monospaced">feed</span> groups the returned entries by feed, and <span class="monospaced">tag</span> groups them by tag. <span class="monospaced">none</span> performs no grouping. The default is none.
+</p>
+</td>
+</tr>
+</table></div>
+</div>
+<div class="sect3">
+<h4 id="_returned_keys_4">Returned keys</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+status
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+code
+</p>
+</li>
+<li>
+<p>
+message
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+entries
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_examples">Examples</h4>
+<div class="sect4">
+<h5 id="_query_1">Query 1</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl http<span style="color: #990000">:</span>//server/api/feed<span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_1">Response 1</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">},</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">entries</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span>
+<span style="color: #000000">        </span><span style="color: #993399">{</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">id</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">37</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">title</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">A post title</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">feed</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">43</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">content</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">This is a post with some content</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">tags</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">programming</span></span><span style="color: #808080">"</span><span style="color: #993399">],</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">read</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">false</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">starred</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">true</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">created</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">changed</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">        </span><span style="color: #993399">},</span>
+<span style="color: #000000">        </span><span style="color: #993399">{</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">id</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">58</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">title</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Some other post's title</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">feed</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">79</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">content</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">This is a post with some content</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">tags</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">programming</span></span><span style="color: #808080">"</span><span style="color: #993399">,</span><span style="color: #000000"> </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #993399">],</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">read</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">true</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">starred</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">false</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">created</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">changed</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">        </span><span style="color: #993399">}</span>
+<span style="color: #000000">    </span><span style="color: #993399">]</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_query_2_2">Query 2</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl http<span style="color: #990000">:</span>//server/api/feed/id<span style="color: #990000">:</span><span style="color: #993399">37</span><span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_2_2">Response 2</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">},</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">entries</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span>
+<span style="color: #000000">        </span><span style="color: #993399">{</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">id</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">37</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">title</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">A post title</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">feed</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">43</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">content</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">This is a post with some content</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">tags</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">programming</span></span><span style="color: #808080">"</span><span style="color: #993399">],</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">read</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">false</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">starred</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">true</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">created</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">changed</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">        </span><span style="color: #993399">}</span>
+<span style="color: #000000">   </span><span style="color: #993399">]</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_query_3_2">Query 3</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl http<span style="color: #990000">:</span>//server/api/feed/tag<span style="color: #990000">:</span>code<span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_3_2">Response 3</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">},</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">entries</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span>
+<span style="color: #000000">        </span><span style="color: #993399">{</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">id</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">58</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">title</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Some other post's title</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">feed</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">79</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">content</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">This is a post with some content</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">tags</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">programming</span></span><span style="color: #808080">"</span><span style="color: #993399">,</span><span style="color: #000000"> </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #993399">],</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">read</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">true</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">starred</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">false</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">created</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">changed</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">        </span><span style="color: #993399">}</span>
+<span style="color: #000000">    </span><span style="color: #993399">]</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_query_4">Query 4</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl http<span style="color: #990000">:</span>//server/api/feed/group<span style="color: #990000">:</span>feed<span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_4">Response 4</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">},</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">entries</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">43</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">name</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Some feed</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">entries</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span>
+<span style="color: #000000">                </span><span style="color: #993399">{</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">id</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">37</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">title</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">A post title</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">feed</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">43</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">content</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">This is a post with some content</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">tags</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">programming</span></span><span style="color: #808080">"</span><span style="color: #993399">],</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">read</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">false</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">starred</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">true</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">created</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">changed</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">                </span><span style="color: #993399">}</span>
+<span style="color: #000000">            </span><span style="color: #993399">]</span>
+<span style="color: #000000">        </span><span style="color: #993399">},</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">79</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">name</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Some other feed</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">            </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">entries</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span>
+<span style="color: #000000">                </span><span style="color: #993399">{</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">id</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">58</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">title</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Some other post's title</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">feed</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">79</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">content</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">This is a post with some content</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">tags</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">programming</span></span><span style="color: #808080">"</span><span style="color: #993399">,</span><span style="color: #000000"> </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #993399">],</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">read</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">true</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">starred</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">false</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">created</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">changed</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">                </span><span style="color: #993399">}</span>
+
+<span style="color: #000000">            </span><span style="color: #993399">]</span>
+<span style="color: #000000">        </span><span style="color: #993399">}</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_query_5">Query 5</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl http<span style="color: #990000">:</span>//server/api/feed/group<span style="color: #990000">:</span>tag<span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_5">Response 5</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">},</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">entries</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span>
+<span style="color: #000000">            </span><span style="color: #993399">{</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">id</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">58</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">title</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Some other post's title</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">feed</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">79</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">content</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">This is a post with some content</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">tags</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">programming</span></span><span style="color: #808080">"</span><span style="color: #993399">,</span><span style="color: #000000"> </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #993399">],</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">read</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">true</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">starred</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">false</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">created</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">changed</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">            </span><span style="color: #993399">}</span>
+<span style="color: #000000">        </span><span style="color: #993399">],</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">programming</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span>
+<span style="color: #000000">            </span><span style="color: #993399">{</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">id</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">37</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">title</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">A post title</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">feed</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">43</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">content</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">This is a post with some content</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">tags</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">programming</span></span><span style="color: #808080">"</span><span style="color: #993399">],</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">read</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">false</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">starred</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">true</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">created</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">changed</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">            </span><span style="color: #993399">},</span>
+<span style="color: #000000">            </span><span style="color: #993399">{</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">id</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">58</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">title</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Some other post's title</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">feed</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">79</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">content</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">This is a post with some content</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">tags</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">programming</span></span><span style="color: #808080">"</span><span style="color: #993399">,</span><span style="color: #000000"> </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #993399">],</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">read</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">true</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">starred</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">false</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">created</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">                </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">changed</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">            </span><span style="color: #993399">}</span>
+<span style="color: #000000">       </span><span style="color: #993399">]</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_feed_id_feed_id">2.5. /api/feed/id:feed_id/</h3>
+<div class="paragraph"><p>Changes feed settings or unsubscribes.</p></div>
+<div class="sect3">
+<h4 id="_method_5">Method</h4>
+<div class="paragraph"><p>POST.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_parameters_5">Parameters</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token (required)
+</p>
+</li>
+<li>
+<p>
+subscribed (optional)
+</p>
+</li>
+<li>
+<p>
+name (optional)
+</p>
+</li>
+<li>
+<p>
+tags (optional)
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_returned_keys_5">Returned keys</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+<li>
+<p>
+status
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+code
+</p>
+</li>
+<li>
+<p>
+message
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_example_4">Example</h4>
+<div class="sect4">
+<h5 id="_query_6">Query</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl -X POST --data <span style="color: #990000">\</span>
+<span style="color: #FF0000">"{</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">csrf_token</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">ZirUnlgQ1kb8HjDCknjpS6KKXMaZdalYdrNp1FH6</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, \</span>
+<span style="color: #CC33CC">\"</span><span style="color: #FF0000">name</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">New feed name</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">tags</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: [</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">tag a</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">tag b</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">]}' \</span>
+<span style="color: #FF0000">http://server/api/feed/id:43/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_6">Response</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">csrf_token</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">823uAOlq+ir66U2S99CZ779av7/i5L/2VkI2YHJr</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_entry_id_entry_id">2.6. /api/entry/id:entry_id/</h3>
+<div class="paragraph"><p>Returns the specified feed entry.</p></div>
+<div class="sect3">
+<h4 id="_method_6">Method</h4>
+<div class="paragraph"><p>GET.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_parameters_6">Parameters</h4>
+<div class="hdlist"><table>
+<tr>
+<td class="hdlist1">
+entry_id
+<br>
+</td>
+<td class="hdlist2">
+<p style="margin-top: 0;">
+ID of the desired entry.
+</p>
+</td>
+</tr>
+</table></div>
+</div>
+<div class="sect3">
+<h4 id="_returned_keys_6">Returned keys</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+entry
+</p>
+</li>
+<li>
+<p>
+status
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+code
+</p>
+</li>
+<li>
+<p>
+message
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_example_5">Example</h4>
+<div class="sect4">
+<h5 id="_query_7">Query</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl http<span style="color: #990000">:</span>//server/api/entry/id<span style="color: #990000">:</span><span style="color: #993399">58</span><span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_7">Response</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">},</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">entry</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">id</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">58</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">title</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Some other post's title</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">feed</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">79</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">content</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">This is a post with some content</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">tags</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">[</span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">programming</span></span><span style="color: #808080">"</span><span style="color: #993399">,</span><span style="color: #000000"> </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #993399">],</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">read</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">true</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">starred</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">false</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">created</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">changed</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">2013-09-21T17:43:42.637118</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_entry_id_entry_id_2">2.7. /api/entry/id:entry_id/</h3>
+<div class="paragraph"><p>Changes attributes of the specified entry.</p></div>
+<div class="sect3">
+<h4 id="_method_7">Method</h4>
+<div class="paragraph"><p>POST.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_parameters_7">Parameters</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token (required)
+</p>
+</li>
+<li>
+<p>
+read (optional)
+</p>
+</li>
+<li>
+<p>
+starred (optional)
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_returned_keys_7">Returned keys</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+<li>
+<p>
+status
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+code
+</p>
+</li>
+<li>
+<p>
+message
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_example_6">Example</h4>
+<div class="sect4">
+<h5 id="_query_8">Query</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl -X POST --data <span style="color: #990000">\</span>
+<span style="color: #FF0000">"{</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">csrf_token</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">S1l86/ghgz8cQ6znmKDx4//SzBQ1PGYGjvY+kII5XQkusVxx</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, \</span>
+<span style="color: #CC33CC">\"</span><span style="color: #FF0000">read</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: true, </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">starred</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: false}"</span> http<span style="color: #990000">:</span>//server/api/entry/id<span style="color: #990000">:</span><span style="color: #993399">58</span><span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_8">Response</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">csrf_token</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">KHsy1/XjtMruhBiZjFaKgD0MrOwk0i6jOSj/aYNpxtCy46nV</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_subscribe">2.8. /api/subscribe/</h3>
+<div class="paragraph"><p>Subscribes to a feed.</p></div>
+<div class="sect3">
+<h4 id="_method_8">Method</h4>
+<div class="paragraph"><p>POST.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_parameters_8">Parameters</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+<li>
+<p>
+url
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_returned_keys_8">Returned keys</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+<li>
+<p>
+feed_id
+</p>
+</li>
+<li>
+<p>
+status
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+code
+</p>
+</li>
+<li>
+<p>
+message
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_example_7">Example</h4>
+<div class="sect4">
+<h5 id="_query_9">Query</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl -X POST --data <span style="color: #990000">\</span>
+<span style="color: #FF0000">"{</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">csrf_token</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">PZ0R6NM2MM1+AhrBhyRH5odsJlwlDhHwCJ8/xiy4HYOdqmOv</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, \</span>
+<span style="color: #CC33CC">\"</span><span style="color: #FF0000">url</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">http://example.com/feed.rss</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">}"</span> http<span style="color: #990000">:</span>//server/api/subscribe<span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_9">Response</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">csrf_token</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">mZVYMLKIIp088+gDNgNNCXF9XfMlRuMGddsrN7+bJNisgmjn</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">feed_id</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">9083</span><span style="color: #993399">,</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_settings">2.9. /api/settings/</h3>
+<div class="paragraph"><p>Retrieves all settings.</p></div>
+<div class="sect3">
+<h4 id="_method_9">Method</h4>
+<div class="paragraph"><p>GET.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_parameters_9">Parameters</h4>
+<div class="paragraph"><p>None.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_returned_keys_9">Returned keys</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+status
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+code
+</p>
+</li>
+<li>
+<p>
+message
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+settings
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_example_8">Example.</h4>
+<div class="sect4">
+<h5 id="_query_10">Query</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl http<span style="color: #990000">:</span>//server/api/settings<span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_10">Response</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">settings</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        // No settings yet</span>
+<span style="color: #000000">    </span><span style="color: #993399">},</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_settings_2">2.10. /api/settings/</h3>
+<div class="paragraph"><p>Changes settings.</p></div>
+<div class="sect3">
+<h4 id="_method_10">Method</h4>
+<div class="paragraph"><p>POST.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_parameters_10">Parameters</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+<li>
+<p>
+settings
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_returned_keys_10">Returned keys</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+<li>
+<p>
+status
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_example_9">Example</h4>
+</div>
+<div class="sect3">
+<h4 id="_query_11">Query</h4>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl -X POST --data <span style="color: #990000">\</span>
+<span style="color: #FF0000">"{</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">csrf_token</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">2QMBqEz4rm615XoZ4K2PuA5yCAlt6Bkx8egyjdUTLROSNwdU</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, \</span>
+<span style="color: #CC33CC">\"</span><span style="color: #FF0000">settings</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: {</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">setting1</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">new value</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">setting2</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: 3123}}' \</span>
+<span style="color: #FF0000">http://server/api/settings/</span></tt></pre></div></div>
+</div>
+<div class="sect3">
+<h4 id="_response_11">Response</h4>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">csrf_token</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">JS4olFfOM0YIRnHzAFIUQZbeMBDLqvq72QT2p2sx5dS7kAcR</span><span style="color: #FF0000">"</span><span style="color: #993399">,</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-09-25 20:03:38 CEST
+</div>
+</div>
+</body>
+</html>
