@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="generator" content="AsciiDoc 8.6.7">
+<meta name="generator" content="AsciiDoc 8.6.6">
 <title>lys-reader API specification</title>
 <style type="text/css">
 /*
@@ -914,8 +914,8 @@ message
 by Lorenzo Bettini
 http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
-<pre><tt>curl -X POST --data <span style="color: #FF0000">"{</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">csrf_token</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">OAKbg0gAc/ltrUTdyGl0VUBL0L0mN/RjqvlbzEV0</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">email</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">user@example.com</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000"> \</span>
-<span style="color: #CC33CC">\"</span><span style="color: #FF0000">password</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">:</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">A5cFi</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">}"</span> http<span style="color: #990000">:</span>//server/api/login<span style="color: #990000">/</span></tt></pre></div></div>
+<pre><tt>curl -X POST --data <span style="color: #FF0000">"{</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">csrf_token</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">OAKbg0gAc/ltrUTdyGl0VUBL0L0mN/RjqvlbzEV0</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, \</span>
+<span style="color: #CC33CC">\"</span><span style="color: #FF0000">email</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">user@example.com</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">password</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">:</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">A5cFi</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">}"</span> http<span style="color: #990000">:</span>//server/api/login<span style="color: #990000">/</span></tt></pre></div></div>
 </div>
 <div class="sect4">
 <h5 id="_response_3">Response</h5>
@@ -935,14 +935,81 @@ http://www.gnu.org/software/src-highlite -->
 </div>
 </div>
 <div class="sect2">
-<h3 id="_api_feed_param_value">2.4. /api/feed/(param:value/)+</h3>
-<div class="paragraph"><p>Returns entries for a feed or a number of according to the parameters provided.</p></div>
+<h3 id="_api_logout">2.4. /api/logout/</h3>
+<div class="paragraph"><p>Logout from account</p></div>
 <div class="sect3">
 <h4 id="_method_4">Method</h4>
-<div class="paragraph"><p>GET.</p></div>
+<div class="paragraph"><p>POST.</p></div>
 </div>
 <div class="sect3">
 <h4 id="_parameters_4">Parameters</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+csrf_token
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_returned_keys_4">Returned keys</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+status
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+code
+</p>
+</li>
+<li>
+<p>
+message
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_example_4">Example</h4>
+<div class="sect4">
+<h5 id="_query_4">Query</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>curl -X POST --data <span style="color: #FF0000">"{</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">csrf_token</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">laep9XXsLo8mwVDMNcVK7u7di+I/+C5f4geFDSFI</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">}"</span> <span style="color: #990000">\</span>
+http<span style="color: #990000">:</span>//server/api/logout<span style="color: #990000">/</span></tt></pre></div></div>
+</div>
+<div class="sect4">
+<h5 id="_response_4">Response</h5>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.5
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #993399">{</span>
+<span style="color: #000000">    </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">status</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #993399">{</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">code</span></span><span style="color: #808080">"</span><span style="color: #808080">: </span><span style="color: #0000FF">0</span><span style="color: #993399">,</span>
+<span style="color: #000000">        </span><span style="color: #808080">"</span><span style="font-weight: bold"><span style="color: #009900">messsage</span></span><span style="color: #808080">"</span><span style="color: #808080">:</span><span style="color: #FF0000"> "</span><span style="color: #FF0000">Success</span><span style="color: #FF0000">"</span>
+<span style="color: #000000">    </span><span style="color: #993399">}</span>
+<span style="color: #993399">}</span></tt></pre></div></div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_feed_param_value">2.5. /api/feed/(param:value/)+</h3>
+<div class="paragraph"><p>Returns entries for a feed or a number of according to the parameters provided.</p></div>
+<div class="sect3">
+<h4 id="_method_5">Method</h4>
+<div class="paragraph"><p>GET.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_parameters_5">Parameters</h4>
 <div class="hdlist"><table>
 <tr>
 <td class="hdlist1">
@@ -991,7 +1058,7 @@ group
 </table></div>
 </div>
 <div class="sect3">
-<h4 id="_returned_keys_4">Returned keys</h4>
+<h4 id="_returned_keys_5">Returned keys</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1139,7 +1206,7 @@ http://www.gnu.org/software/src-highlite -->
 <span style="color: #993399">}</span></tt></pre></div></div>
 </div>
 <div class="sect4">
-<h5 id="_query_4">Query 4</h5>
+<h5 id="_query_4_2">Query 4</h5>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.5
 by Lorenzo Bettini
@@ -1148,7 +1215,7 @@ http://www.gnu.org/software/src-highlite -->
 <pre><tt>curl http<span style="color: #990000">:</span>//server/api/feed/group<span style="color: #990000">:</span>feed<span style="color: #990000">/</span></tt></pre></div></div>
 </div>
 <div class="sect4">
-<h5 id="_response_4">Response 4</h5>
+<h5 id="_response_4_2">Response 4</h5>
 <div class="listingblock">
 <div class="content"><!-- Generator: GNU source-highlight 3.1.5
 by Lorenzo Bettini
@@ -1261,14 +1328,14 @@ http://www.gnu.org/software/src-highlite -->
 </div>
 </div>
 <div class="sect2">
-<h3 id="_api_feed_id_feed_id">2.5. /api/feed/id:feed_id/</h3>
+<h3 id="_api_feed_id_feed_id">2.6. /api/feed/id:feed_id/</h3>
 <div class="paragraph"><p>Changes feed settings or unsubscribes.</p></div>
 <div class="sect3">
-<h4 id="_method_5">Method</h4>
+<h4 id="_method_6">Method</h4>
 <div class="paragraph"><p>POST.</p></div>
 </div>
 <div class="sect3">
-<h4 id="_parameters_5">Parameters</h4>
+<h4 id="_parameters_6">Parameters</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1293,7 +1360,7 @@ tags (optional)
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_returned_keys_5">Returned keys</h4>
+<h4 id="_returned_keys_6">Returned keys</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1320,7 +1387,7 @@ message
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_example_4">Example</h4>
+<h4 id="_example_5">Example</h4>
 <div class="sect4">
 <h5 id="_query_6">Query</h5>
 <div class="listingblock">
@@ -1351,14 +1418,14 @@ http://www.gnu.org/software/src-highlite -->
 </div>
 </div>
 <div class="sect2">
-<h3 id="_api_entry_id_entry_id">2.6. /api/entry/id:entry_id/</h3>
+<h3 id="_api_entry_id_entry_id">2.7. /api/entry/id:entry_id/</h3>
 <div class="paragraph"><p>Returns the specified feed entry.</p></div>
 <div class="sect3">
-<h4 id="_method_6">Method</h4>
+<h4 id="_method_7">Method</h4>
 <div class="paragraph"><p>GET.</p></div>
 </div>
 <div class="sect3">
-<h4 id="_parameters_6">Parameters</h4>
+<h4 id="_parameters_7">Parameters</h4>
 <div class="hdlist"><table>
 <tr>
 <td class="hdlist1">
@@ -1374,7 +1441,7 @@ ID of the desired entry.
 </table></div>
 </div>
 <div class="sect3">
-<h4 id="_returned_keys_6">Returned keys</h4>
+<h4 id="_returned_keys_7">Returned keys</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1401,7 +1468,7 @@ message
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_example_5">Example</h4>
+<h4 id="_example_6">Example</h4>
 <div class="sect4">
 <h5 id="_query_7">Query</h5>
 <div class="listingblock">
@@ -1439,14 +1506,14 @@ http://www.gnu.org/software/src-highlite -->
 </div>
 </div>
 <div class="sect2">
-<h3 id="_api_entry_id_entry_id_2">2.7. /api/entry/id:entry_id/</h3>
+<h3 id="_api_entry_id_entry_id_2">2.8. /api/entry/id:entry_id/</h3>
 <div class="paragraph"><p>Changes attributes of the specified entry.</p></div>
 <div class="sect3">
-<h4 id="_method_7">Method</h4>
+<h4 id="_method_8">Method</h4>
 <div class="paragraph"><p>POST.</p></div>
 </div>
 <div class="sect3">
-<h4 id="_parameters_7">Parameters</h4>
+<h4 id="_parameters_8">Parameters</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1466,7 +1533,7 @@ starred (optional)
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_returned_keys_7">Returned keys</h4>
+<h4 id="_returned_keys_8">Returned keys</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1493,7 +1560,7 @@ message
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_example_6">Example</h4>
+<h4 id="_example_7">Example</h4>
 <div class="sect4">
 <h5 id="_query_8">Query</h5>
 <div class="listingblock">
@@ -1523,14 +1590,14 @@ http://www.gnu.org/software/src-highlite -->
 </div>
 </div>
 <div class="sect2">
-<h3 id="_api_subscribe">2.8. /api/subscribe/</h3>
+<h3 id="_api_subscribe">2.9. /api/subscribe/</h3>
 <div class="paragraph"><p>Subscribes to a feed.</p></div>
 <div class="sect3">
-<h4 id="_method_8">Method</h4>
+<h4 id="_method_9">Method</h4>
 <div class="paragraph"><p>POST.</p></div>
 </div>
 <div class="sect3">
-<h4 id="_parameters_8">Parameters</h4>
+<h4 id="_parameters_9">Parameters</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1545,7 +1612,7 @@ url
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_returned_keys_8">Returned keys</h4>
+<h4 id="_returned_keys_9">Returned keys</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1577,7 +1644,7 @@ message
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_example_7">Example</h4>
+<h4 id="_example_8">Example</h4>
 <div class="sect4">
 <h5 id="_query_9">Query</h5>
 <div class="listingblock">
@@ -1608,18 +1675,18 @@ http://www.gnu.org/software/src-highlite -->
 </div>
 </div>
 <div class="sect2">
-<h3 id="_api_settings">2.9. /api/settings/</h3>
+<h3 id="_api_settings">2.10. /api/settings/</h3>
 <div class="paragraph"><p>Retrieves all settings.</p></div>
 <div class="sect3">
-<h4 id="_method_9">Method</h4>
+<h4 id="_method_10">Method</h4>
 <div class="paragraph"><p>GET.</p></div>
 </div>
 <div class="sect3">
-<h4 id="_parameters_9">Parameters</h4>
+<h4 id="_parameters_10">Parameters</h4>
 <div class="paragraph"><p>None.</p></div>
 </div>
 <div class="sect3">
-<h4 id="_returned_keys_9">Returned keys</h4>
+<h4 id="_returned_keys_10">Returned keys</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1646,7 +1713,7 @@ settings
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_example_8">Example.</h4>
+<h4 id="_example_9">Example.</h4>
 <div class="sect4">
 <h5 id="_query_10">Query</h5>
 <div class="listingblock">
@@ -1676,14 +1743,14 @@ http://www.gnu.org/software/src-highlite -->
 </div>
 </div>
 <div class="sect2">
-<h3 id="_api_settings_2">2.10. /api/settings/</h3>
+<h3 id="_api_settings_2">2.11. /api/settings/</h3>
 <div class="paragraph"><p>Changes settings.</p></div>
 <div class="sect3">
-<h4 id="_method_10">Method</h4>
+<h4 id="_method_11">Method</h4>
 <div class="paragraph"><p>POST.</p></div>
 </div>
 <div class="sect3">
-<h4 id="_parameters_10">Parameters</h4>
+<h4 id="_parameters_11">Parameters</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1698,7 +1765,7 @@ settings
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_returned_keys_10">Returned keys</h4>
+<h4 id="_returned_keys_11">Returned keys</h4>
 <div class="ulist"><ul>
 <li>
 <p>
@@ -1713,7 +1780,7 @@ status
 </ul></div>
 </div>
 <div class="sect3">
-<h4 id="_example_9">Example</h4>
+<h4 id="_example_10">Example</h4>
 </div>
 <div class="sect3">
 <h4 id="_query_11">Query</h4>
@@ -1749,7 +1816,7 @@ http://www.gnu.org/software/src-highlite -->
 <div id="footnotes"><hr></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-09-25 20:03:38 CEST
+Last updated 2013-09-28 13:14:10 CEST
 </div>
 </div>
 </body>
