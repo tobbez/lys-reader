@@ -113,8 +113,8 @@ POST.
 ==== Example
 ===== Query
 [source,sh]
-curl -X POST --data "{\"csrf_token\": \"OAKbg0gAc/ltrUTdyGl0VUBL0L0mN/RjqvlbzEV0\", \"email\": \"user@example.com\" \
-\"password\":\"A5cFi\"}" http://server/api/login/
+curl -X POST --data "{\"csrf_token\": \"OAKbg0gAc/ltrUTdyGl0VUBL0L0mN/RjqvlbzEV0\", \
+\"email\": \"user@example.com\", \"password\":\"A5cFi\"}" http://server/api/login/
 
 ===== Response
 [source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
