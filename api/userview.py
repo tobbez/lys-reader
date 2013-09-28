@@ -3,10 +3,9 @@ from datetime import datetime, timedelta
 from api import app
 from api.user import *
 
-@require_csrf_token
 @app.route('/api/signup/', methods = ['POST'])
-def api_user_signup():
-    generate_csrf_token(session)
+@require_csrf_token
+def api_user_signup(csrf):
     status = {}
     httpcode = 200
 
@@ -23,12 +22,11 @@ def api_user_signup():
         status['message'] = 'Missing paramter(s)'
         httpcode = 400
 
-    return make_response(jsonify({ 'csrf_token': session['csrf'], 'status': status }), httpcode)
+    return make_response(jsonify({ 'csrf_token': csrf, 'status': status }), httpcode)
 
-@require_csrf_token
 @app.route('/api/login/', methods = ['POST'])
-def api_user_login():
-    generate_csrf_token(session)
+@require_csrf_token
+def api_user_login(csrf):
     status = {}
     httpcode = 200
 
@@ -47,12 +45,12 @@ def api_user_login():
         status['message'] = 'Missing paramter(s)'
         httpcode = 400
 
-    return make_response(jsonify({ 'csrf_token': session['csrf'], 'status': status }), httpcode)
+    return make_response(jsonify({ 'csrf_token': csrf, 'status': status }), httpcode)
 
-@require_csrf_token
-@require_authentication
 @app.route('/api/logout/', methods = ['POST'])
-def api_user_logout():
+@require_authentication
+@require_csrf_token
+def api_user_logout(csrf):
     session['loggedin'] = False
     response = make_response(jsonify({ 'status': {'code': '0', 'message': 'User logged out successfully'}}), 200)
     return response
