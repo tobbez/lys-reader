@@ -53,8 +53,8 @@ def api_user_login():
 @require_authentication
 @app.route('/api/logout/', methods = ['POST'])
 def api_user_logout():
-    session.destroy()
-    response = make_response(jsonify({ 'status': 'OK', 'message': 'User logged out successfully'}), 200)
+    session['loggedin'] = False
+    response = make_response(jsonify({ 'status': {'code': '0', 'message': 'User logged out successfully'}}), 200)
     return response
 
 @app.route('/api/')
