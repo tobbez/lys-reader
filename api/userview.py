@@ -41,7 +41,8 @@ def api_user_logout():
 @app.route('/api/')
 def api_root():
     generate_csrf_token(session)
-
-    response = make_response(jsonify({'csrf_token': session['csrf']}), 200)
+    
+    status = {'code': 200, 'message': 'Sucess'}
+    response = make_response(jsonify({'csrf_token': session['csrf'], 'status': status}), 200)
     return response
 
