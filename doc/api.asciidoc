@@ -128,6 +128,38 @@ curl -X POST --data "{\"csrf_token\": \"OAKbg0gAc/ltrUTdyGl0VUBL0L0mN/RjqvlbzEV0
 }
 ----
 
+:numbered:
+=== /api/logout/
+:numbered!:
+Logout from account
+
+==== Method
+POST.
+
+==== Parameters
+ * csrf_token
+
+==== Returned keys
+ * status
+ ** code
+ ** message
+
+==== Example
+===== Query
+[source,sh]
+curl -X POST --data "{\"csrf_token\": \"laep9XXsLo8mwVDMNcVK7u7di+I/+C5f4geFDSFI\"}" \
+http://server/api/logout/
+ 
+===== Response
+[source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
+----
+{
+    "status": {
+        "code": 0,
+        "messsage": "Success"
+    }
+}
+----
 
 :numbered:
 === /api/feed/(param:value/)+
