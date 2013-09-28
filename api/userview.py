@@ -6,13 +6,24 @@ from api.user import *
 @require_csrf_token
 @app.route('/api/signup/', methods = ['POST'])
 def api_user_signup():
+    generate_csrf_token(session)
+    status = {}
+    httpcode = 200
+
     if 'email' in request.json and 'password' in request.json:
         if register_user(request.json['email'], request.json['password']):
-            return make_response(jsonify({ 'status': 'OK', 'message': 'User account created'}), 200)
+            status['code'] = 0
+            status['message'] = 'Success'
         else:
-            return make_response(jsonify({ 'status': 'FAIL', 'message': 'User account not created'}), 200)
+            status['code'] = 1 
+            status['message'] = 'Could not register user, maybe user already exists?'
 
-    return make_response(jsonify({ 'status': 'BAD REQUEST', 'message': 'Missing parameters'}), 400)
+    else:
+        status['code'] = 2
+        status['message'] = 'Missing paramter(s)'
+        httpcode = 400
+
+    return make_response(jsonify({ 'csrf_token': session['csrf'], 'status': status }), httpcode)
 
 @require_csrf_token
 @app.route('/api/login/', methods = ['POST'])
@@ -42,7 +53,7 @@ def api_user_logout():
 def api_root():
     generate_csrf_token(session)
     
-    status = {'code': 200, 'message': 'Sucess'}
+    status = {'code': 0, 'message': 'Sucess'}
     response = make_response(jsonify({'csrf_token': session['csrf'], 'status': status}), 200)
     return response
 
