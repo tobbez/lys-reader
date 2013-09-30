@@ -14,11 +14,11 @@ def api_user_signup(csrf):
             status['code'] = 0
             status['message'] = 'Success'
         else:
-            status['code'] = 1 
+            status['code'] = 5 
             status['message'] = 'Could not register user, maybe user already exists?'
 
     else:
-        status['code'] = 2
+        status['code'] = 3
         status['message'] = 'Missing paramter(s)'
         httpcode = 400
 
@@ -41,7 +41,7 @@ def api_user_login(csrf):
             status['code'] = 4
             status['message'] = 'Email and password combination did not match'
     else:
-        status['code'] = 2
+        status['code'] = 3
         status['message'] = 'Missing paramter(s)'
         httpcode = 400
 
