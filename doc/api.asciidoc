@@ -16,6 +16,28 @@ Cookies are used for authentication.
 === CSRF protection
 Since the CSRF token changes every time it is used, the new token is returned in the response for all endpoints that use it. This is done to decrease the number of requests required to interact with the API.
 
+=== Status codes
+:numbered!:
+
+==== Code: 0
+Operation was successful
+
+==== Code: 1
+User is not logged in.
+
+==== Code: 2
+Invalid or missing csrf token
+
+==== Code: 3 
+One or more required paramaters are missing.
+
+==== Code: 4
+Unable to login. This may be because the wrong password was given or that
+the user does not exist.
+
+==== Code: 5
+A user with the given credentials could not be registered.
+
 == Endpoints
 
 :numbered:
