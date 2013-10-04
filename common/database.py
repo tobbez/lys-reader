@@ -14,3 +14,6 @@ class Database():
 
     def get_connection(self):
         return self._pool.getconn()
+
+    def put_away_connection(self, con):
+        self._pool.putconn(con)
