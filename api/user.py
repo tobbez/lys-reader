@@ -3,40 +3,40 @@ from functools import wraps
 from os import urandom
 from datetime import datetime, timedelta
 from base64 import b64encode
-from api import DB
+from api import database
 
-def register_user(email, password):
+@database
+def register_user(email, password, connection):
 
     if not is_registered(email):
-        con = DB.get_connection()
-        cur = con.cursor()
+        cur = connection.cursor()
 
         cur.execute('INSERT INTO lysr_user (email, password) VALUES (%s, %s)', (email, password))
-        con.commit()
+        connection.commit()
 
         return True
     return False
 
-def check_user_credentials(email, password):
+@database
+def check_user_credentials(email, password, connection):
 
     if is_registered(email):
-        con = DB.get_connection()
-        cur = con.cursor()
+        cur = connection.cursor()
 
         cur.execute('SELECT id FROM lysr_user WHERE email = %s and password = %s', (email, password))
-        con.commit()
+        connection.commit()
 
         if cur.rowcount is 1:
             return cur.fetchone()[0]
 
         return None
 
-def is_registered(email):
-    con = DB.get_connection()
-    cur = con.cursor()
+@database
+def is_registered(email, connection):
+    cur = connection.cursor()
 
     cur.execute('SELECT id FROM lysr_user WHERE email = %s', (email,))
-    con.commit()
+    connection.commit()
 
     if cur.rowcount is 0:
         return False
@@ -49,12 +49,12 @@ def generate_csrf_token(session):
     session['csrf'] = token
     session['csrf_expire'] = expire_time
 
-def get_unread(id):
-    con = DB.get_connection()
-    cur = con.cursor()
+@database
+def get_unread(id, connection):
+    cur = connection.cursor()
 
     cur.execute('SELECT COUNT(*) FROM lysr_feed_entry_status WHERE read = FALSE and id = %s;', (id,))
-    con.commit()
+    connection.commit()
 
     return cur.fetchone()[0]
 
