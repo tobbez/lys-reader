@@ -1,19 +1,9 @@
 from flask import Flask, g
-from simplekv.fs import FilesystemStore
-from flaskext.kvsession import KVSessionExtension
 from functools import wraps
 
 from common import Database
 
-store = FilesystemStore('session')
-
 app = Flask(__name__)
-
-app.config.from_pyfile('../config.defaults.py')
-app.config.from_pyfile('../config.py')
-app.secret_key = app.config['SECRET_KEY']
-
-KVSessionExtension(store, app)
 
 """ Pass a connection to the function
     and then put it away when the function
