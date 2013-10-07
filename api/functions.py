@@ -59,7 +59,7 @@ def database(f):
 @database
 def register_user(email, password, connection):
 
-    if not is_registered(email):
+    if not is_user_registered(email):
         cur = connection.cursor()
 
         cur.execute('INSERT INTO lysr_user (email, password) VALUES (%s, %s)', (email, password))
@@ -71,7 +71,7 @@ def register_user(email, password, connection):
 @database
 def check_user_credentials(email, password, connection):
 
-    if is_registered(email):
+    if is_user_registered(email):
         cur = connection.cursor()
 
         cur.execute('SELECT id FROM lysr_user WHERE email = %s and password = %s', (email, password))
@@ -83,7 +83,7 @@ def check_user_credentials(email, password, connection):
         return None
 
 @database
-def is_registered(email, connection):
+def is_user_registered(email, connection):
     cur = connection.cursor()
 
     cur.execute('SELECT id FROM lysr_user WHERE email = %s', (email,))
