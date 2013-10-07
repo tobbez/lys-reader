@@ -1,7 +1,7 @@
 from flask import abort, request, jsonify, make_response, session
 from datetime import datetime, timedelta
 from api import app
-from api.user import *
+from api.functions import *
 
 @app.route('/api/signup/', methods = ['POST'])
 @require_csrf_token
