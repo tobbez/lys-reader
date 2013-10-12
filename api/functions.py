@@ -4,7 +4,7 @@ from os import urandom
 from datetime import datetime, timedelta
 from base64 import b64encode
 
-from api import app
+from api import app, db
 from common.database import Database
 
 def require_csrf_token(f):
@@ -35,17 +35,18 @@ def require_authentication(f):
 def database(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        """ If flask.g.db is not set yet,
+        global db
+        """ If db is not set yet,
             set it. """
-        if not hasattr(g, 'db'):
-            g.db = Database(app.config)
+        if not db:
+            db = Database(app.config)
 
-        con = g.db.get_connection()
+        con = db.get_connection()
         
         kwargs['connection'] = con
         result = f(*args, **kwargs)
         
-        g.db.put_away_connection(con)
+        db.put_away_connection(con)
         
         return result
     return decorated_function
