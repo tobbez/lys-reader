@@ -84,7 +84,21 @@ class APITest(unittest.TestCase):
         data = json.loads(rv.data)
         assert data['status']['code'] is 5
         assert data['csrf_token']
-        assert True
+
+    # Test missing param
+    def test_2c_api_create_user(self):
+        data = json.dumps(dict(
+            csrf_token='test',
+            email='test@example.com'))
+        
+        self._setup_csrf()
+        
+        rv = self.app.post('/api/signup/', data=data,
+            content_type='application/json')
+
+        data = json.loads(rv.data)
+        assert data['status']['code'] is 3
+        assert data['csrf_token']
 
 if __name__ == '__main__':
     unittest.main()
