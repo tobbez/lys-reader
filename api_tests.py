@@ -100,5 +100,21 @@ class APITest(unittest.TestCase):
         assert data['status']['code'] is 3
         assert data['csrf_token']
 
+    # Test login
+    def test_3a_api_login(self):
+        data = json.dumps(dict(
+            csrf_token='test',
+            email='test@example.com',
+            password='test'))
+
+        self._setup_csrf()
+
+        rv = self.app.post('/api/login/', data=data,
+            content_type='application/json')
+
+        data = json.loads(rv.data)
+        assert data['status']['code'] is 0
+        assert data['csrf_token']
+
 if __name__ == '__main__':
     unittest.main()
