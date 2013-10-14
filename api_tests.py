@@ -37,6 +37,12 @@ class APITest(unittest.TestCase):
         
         db.put_away_connection(con)
 
+    # Make the csrf_token test and make it expire in a min
+    def _setup_csrf(self):
+        with self.app.session_transaction() as sess:
+            sess['csrf'] = 'test'
+            sess['csrf_expire'] = datetime.now() + timedelta(minutes=1) 
+
     def test_1_api_base(self):
         rv = self.app.get('/api/')
         data = json.loads(rv.data)
@@ -49,9 +55,8 @@ class APITest(unittest.TestCase):
             email='test@example.com',
             password='test'))
         
-        with self.app.session_transaction() as sess:
-            sess['csrf'] = 'test'
-            sess['csrf_expire'] = datetime.now() + timedelta(minutes=1) 
+        self._setup_csrf()
+        
         rv = self.app.post('/api/signup/', data=data,
             content_type='application/json')
 
