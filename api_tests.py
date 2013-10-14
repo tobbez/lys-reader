@@ -3,6 +3,7 @@ import unittest
 import json
 from simplekv.fs import FilesystemStore
 from flaskext.kvsession import KVSessionExtension
+from datetime import datetime, timedelta
 
 from api import app, db
 from common.database import Database
@@ -24,7 +25,6 @@ class APITest(unittest.TestCase):
         app.testing = True
         self.app = app.test_client(use_cookies=True)
 
-        self.csrf = ''
 
     """Setup the database
         by clearing it and loading the schema"""
@@ -42,7 +42,22 @@ class APITest(unittest.TestCase):
         data = json.loads(rv.data)
         assert data['status']['code'] is 0
         assert data['csrf_token']
-        self.csrf = data['csrf_token']
+
+    def test_2_api_create_user(self):
+        data = json.dumps(dict(
+            csrf_token='test',
+            email='test@example.com',
+            password='test'))
+        
+        with self.app.session_transaction() as sess:
+            sess['csrf'] = 'test'
+            sess['csrf_expire'] = datetime.now() + timedelta(minutes=1) 
+        rv = self.app.post('/api/signup/', data=data,
+            content_type='application/json')
+
+        data = json.loads(rv.data)
+        assert data['status']['code'] is 0
+        assert data['csrf_token']
 
 if __name__ == '__main__':
     unittest.main()
