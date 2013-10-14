@@ -6,6 +6,7 @@ from flaskext.kvsession import KVSessionExtension
 from datetime import datetime, timedelta
 
 from api import app, db
+from api.functions import register_user
 from common.database import Database
 
 class APITest(unittest.TestCase):
@@ -43,13 +44,15 @@ class APITest(unittest.TestCase):
             sess['csrf'] = 'test'
             sess['csrf_expire'] = datetime.now() + timedelta(minutes=1) 
 
+    # Test /
     def test_1_api_base(self):
         rv = self.app.get('/api/')
         data = json.loads(rv.data)
         assert data['status']['code'] is 0
         assert data['csrf_token']
 
-    def test_2_api_create_user(self):
+    # Test registering a new user
+    def test_2a_api_create_user(self):
         data = json.dumps(dict(
             csrf_token='test',
             email='test@example.com',
@@ -63,6 +66,24 @@ class APITest(unittest.TestCase):
         data = json.loads(rv.data)
         assert data['status']['code'] is 0
         assert data['csrf_token']
+
+    # Test that we can't register a user twice
+    def test_2b_api_create_user(self):
+        register_user('test@example.com', 'test')
+        data = json.dumps(dict(
+            csrf_token='test',
+            email='test@example.com',
+            password='test'))
+        
+        self._setup_csrf()
+        
+        rv = self.app.post('/api/signup/', data=data,
+            content_type='application/json')
+
+        data = json.loads(rv.data)
+        assert data['status']['code'] is 5
+        assert data['csrf_token']
+        assert True
 
 if __name__ == '__main__':
     unittest.main()
