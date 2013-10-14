@@ -46,6 +46,10 @@ class APITest(unittest.TestCase):
             sess['csrf'] = 'test'
             sess['csrf_expire'] = datetime.now() + timedelta(minutes=1) 
 
+    def _make_logged_in(self):
+        with self.app.session_transaction() as sess:
+            sess['loggedin'] = True
+
     # Test /
     def test_1_api_base(self):
         rv = self.app.get('/api/')
@@ -122,8 +126,7 @@ class APITest(unittest.TestCase):
             csrf_token='test'))
 
         self._setup_csrf()
-        with self.app.session_transaction() as sess:
-            sess['loggedin'] = True
+        self._make_logged_in()
 
         rv = self.app.post('/api/logout/', data=data,
             content_type='application/json')
