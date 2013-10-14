@@ -116,5 +116,20 @@ class APITest(unittest.TestCase):
         assert data['status']['code'] is 0
         assert data['csrf_token']
 
+    # Test logout
+    def test_4a_api_login(self):
+        data = json.dumps(dict(
+            csrf_token='test'))
+
+        self._setup_csrf()
+        with self.app.session_transaction() as sess:
+            sess['loggedin'] = True
+
+        rv = self.app.post('/api/logout/', data=data,
+            content_type='application/json')
+
+        data = json.loads(rv.data)
+        assert data['status']['code'] is 0
+
 if __name__ == '__main__':
     unittest.main()
