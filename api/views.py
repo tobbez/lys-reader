@@ -52,7 +52,7 @@ def api_user_login(csrf):
 @require_csrf_token
 def api_user_logout(csrf):
     session['loggedin'] = False
-    response = make_response(jsonify({ 'status': {'code': '0', 'message': 'Sucess'}}), 200)
+    response = make_response(jsonify({ 'status': {'code': 0, 'message': 'Sucess'}}), 200)
     return response
 
 @app.route('/api/')
