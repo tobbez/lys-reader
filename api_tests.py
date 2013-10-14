@@ -11,7 +11,8 @@ from common.database import Database
 
 class APITest(unittest.TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         global db
         store = FilesystemStore('session')
         KVSessionExtension(store, app)
@@ -22,13 +23,14 @@ class APITest(unittest.TestCase):
         app.secret_key = app.config['SECRET_KEY']
         db = Database(app.config)
 
-        self._setup_database()
+        cls._setup_database()
         app.testing = True
-        self.app = app.test_client(use_cookies=True)
+        cls.app = app.test_client(use_cookies=True)
 
 
     """Setup the database
         by clearing it and loading the schema"""
+    @classmethod
     def _setup_database(self):
         con = db.get_connection()
         cur = con.cursor()
@@ -69,7 +71,6 @@ class APITest(unittest.TestCase):
 
     # Test that we can't register a user twice
     def test_2b_api_create_user(self):
-        register_user('test@example.com', 'test')
         data = json.dumps(dict(
             csrf_token='test',
             email='test@example.com',
