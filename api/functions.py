@@ -54,7 +54,7 @@ def database(f):
 def generate_csrf_token(session):
     expire_time = datetime.now() + timedelta(minutes=15)
     token = b64encode(urandom(30))
-    session['csrf'] = token
+    session['csrf'] = token.decode('UTF-8')
     session['csrf_expire'] = expire_time
 
 @database
