@@ -1,9 +1,9 @@
 from api import app
-from simplekv.fs import FilesystemStore
-from flaskext.kvsession import KVSessionExtension
+#from simplekv.fs import FilesystemStore
+#from flaskext.kvsession import KVSessionExtension
 
-store = FilesystemStore('session')
-KVSessionExtension(store, app)
+#store = FilesystemStore('session')
+#KVSessionExtension(store, app)
 
 app.config.from_pyfile('../config.defaults.py')
 app.config.from_pyfile('../config.py')

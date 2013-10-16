@@ -1,8 +1,8 @@
 from flask import Flask, g
 import unittest
 import json
-from simplekv.fs import FilesystemStore
-from flaskext.kvsession import KVSessionExtension
+#from simplekv.fs import FilesystemStore
+#from flaskext.kvsession import KVSessionExtension
 from datetime import datetime, timedelta
 
 from api import app, db
@@ -14,8 +14,8 @@ class APITest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         global db
-        store = FilesystemStore('session')
-        KVSessionExtension(store, app)
+        #store = FilesystemStore('session')
+        #KVSessionExtension(store, app)
         
         # Load the debug config
         app.config.from_pyfile('../config.defaults.py')
