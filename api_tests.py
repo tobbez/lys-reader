@@ -53,7 +53,7 @@ class APITest(unittest.TestCase):
     # Test /
     def test_1_api_base(self):
         rv = self.app.get('/api/')
-        data = json.loads(rv.data)
+        data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 0
         assert data['csrf_token']
 
@@ -69,7 +69,7 @@ class APITest(unittest.TestCase):
         rv = self.app.post('/api/signup/', data=data,
             content_type='application/json')
 
-        data = json.loads(rv.data)
+        data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 0
         assert data['csrf_token']
 
@@ -85,7 +85,7 @@ class APITest(unittest.TestCase):
         rv = self.app.post('/api/signup/', data=data,
             content_type='application/json')
 
-        data = json.loads(rv.data)
+        data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 5
         assert data['csrf_token']
 
@@ -100,7 +100,7 @@ class APITest(unittest.TestCase):
         rv = self.app.post('/api/signup/', data=data,
             content_type='application/json')
 
-        data = json.loads(rv.data)
+        data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 3
         assert data['csrf_token']
 
@@ -116,7 +116,7 @@ class APITest(unittest.TestCase):
         rv = self.app.post('/api/login/', data=data,
             content_type='application/json')
 
-        data = json.loads(rv.data)
+        data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 0
         assert data['csrf_token']
 
@@ -131,7 +131,7 @@ class APITest(unittest.TestCase):
         rv = self.app.post('/api/logout/', data=data,
             content_type='application/json')
 
-        data = json.loads(rv.data)
+        data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 0
 
 if __name__ == '__main__':
