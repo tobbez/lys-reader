@@ -35,7 +35,9 @@ class APITest(unittest.TestCase):
         con = db.get_connection()
         cur = con.cursor()
 
-        cur.execute(open('schema.sql', 'r').read())
+        schema = open('schema.sql', 'r')
+        cur.execute(schema.read())
+        schema.close()
         con.commit()
         
         db.put_away_connection(con)
