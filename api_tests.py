@@ -134,7 +134,7 @@ class ApiTestCase(unittest.TestCase):
         assert data['csrf_token']
 
     # Test logout
-    def test_4a_api_login(self):
+    def test_4a_api_logout(self):
         rv = self.app.post('/api/logout/',
                 data=json.dumps(dict(
                 csrf_token='test')),
