@@ -61,15 +61,14 @@ class APITest(unittest.TestCase):
 
     # Test registering a new user
     def test_2a_api_create_user(self):
-        data = json.dumps(dict(
-            csrf_token='test',
-            email='test@example.com',
-            password='test'))
-        
         self._setup_csrf()
         
-        rv = self.app.post('/api/signup/', data=data,
-            content_type='application/json')
+        rv = self.app.post('/api/signup/',
+                data=json.dumps(dict(
+                csrf_token='test',
+                email='test@example.com',
+                password='test')),
+                content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 0
@@ -77,15 +76,14 @@ class APITest(unittest.TestCase):
 
     # Test that we can't register a user twice
     def test_2b_api_create_user(self):
-        data = json.dumps(dict(
-            csrf_token='test',
-            email='test@example.com',
-            password='test'))
-        
         self._setup_csrf()
         
-        rv = self.app.post('/api/signup/', data=data,
-            content_type='application/json')
+        rv = self.app.post('/api/signup/',
+                data=json.dumps(dict(
+                csrf_token='test',
+                email='test@example.com',
+                password='test')),
+                content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 5
@@ -93,14 +91,13 @@ class APITest(unittest.TestCase):
 
     # Test missing param
     def test_2c_api_create_user(self):
-        data = json.dumps(dict(
-            csrf_token='test',
-            email='test@example.com'))
-        
         self._setup_csrf()
         
-        rv = self.app.post('/api/signup/', data=data,
-            content_type='application/json')
+        rv = self.app.post('/api/signup/',
+                data=json.dumps(dict(
+                csrf_token='test',
+                email='test@example.com')),
+                content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 3
@@ -108,15 +105,14 @@ class APITest(unittest.TestCase):
 
     # Test login
     def test_3a_api_login(self):
-        data = json.dumps(dict(
-            csrf_token='test',
-            email='test@example.com',
-            password='test'))
-
         self._setup_csrf()
 
-        rv = self.app.post('/api/login/', data=data,
-            content_type='application/json')
+        rv = self.app.post('/api/login/',
+                data=json.dumps(dict(
+                csrf_token='test',
+                email='test@example.com',
+                password='test')),
+                content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 0
@@ -124,14 +120,13 @@ class APITest(unittest.TestCase):
 
     # Test logout
     def test_4a_api_login(self):
-        data = json.dumps(dict(
-            csrf_token='test'))
-
         self._setup_csrf()
         self._make_logged_in()
 
-        rv = self.app.post('/api/logout/', data=data,
-            content_type='application/json')
+        rv = self.app.post('/api/logout/',
+                data=json.dumps(dict(
+                csrf_token='test')),
+                content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 0
