@@ -143,5 +143,15 @@ class ApiTestCase(unittest.TestCase):
         data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 0
 
+    # Test logout while not logged in
+    def test_4b_api_logout_failure(self):
+        rv = self.app.post('/api/logout/',
+                data=json.dumps(dict(
+                csrf_token='test')),
+                content_type='application/json')
+
+        data = json.loads(rv.data.decode('UTF-8'))
+        assert data['status']['code'] is 1
+
 if __name__ == '__main__':
     unittest.main()
