@@ -9,7 +9,7 @@ from api import app, db
 from api.functions import register_user
 from common.database import Database
 
-class APITest(unittest.TestCase):
+class ApiTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
