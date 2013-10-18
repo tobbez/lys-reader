@@ -27,6 +27,8 @@ class ApiTestCase(unittest.TestCase):
         app.testing = True
         cls.app = app.test_client(use_cookies=True)
 
+    def setUp(self):
+        self._setup_csrf()
 
     """Setup the database
         by clearing it and loading the schema"""
@@ -57,8 +59,6 @@ class ApiTestCase(unittest.TestCase):
 
     # Test registering a new user
     def test_2a_api_create_user(self):
-        self._setup_csrf()
-        
         rv = self.app.post('/api/signup/',
                 data=json.dumps(dict(
                 csrf_token='test',
@@ -72,8 +72,6 @@ class ApiTestCase(unittest.TestCase):
 
     # Test that we can't register a user twice
     def test_2b_api_create_user(self):
-        self._setup_csrf()
-        
         rv = self.app.post('/api/signup/',
                 data=json.dumps(dict(
                 csrf_token='test',
@@ -87,8 +85,6 @@ class ApiTestCase(unittest.TestCase):
 
     # Test missing param
     def test_2c_api_create_user(self):
-        self._setup_csrf()
-        
         rv = self.app.post('/api/signup/',
                 data=json.dumps(dict(
                 csrf_token='test',
@@ -101,8 +97,6 @@ class ApiTestCase(unittest.TestCase):
 
     # Test login
     def test_3a_api_login(self):
-        self._setup_csrf()
-
         rv = self.app.post('/api/login/',
                 data=json.dumps(dict(
                 csrf_token='test',
@@ -116,8 +110,6 @@ class ApiTestCase(unittest.TestCase):
 
     # Test logout
     def test_4a_api_login(self):
-        self._setup_csrf()
-
         rv = self.app.post('/api/logout/',
                 data=json.dumps(dict(
                 csrf_token='test')),
