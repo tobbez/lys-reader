@@ -58,7 +58,7 @@ class ApiTestCase(unittest.TestCase):
         assert data['csrf_token']
 
     # Test registering a new user
-    def test_2a_api_create_user(self):
+    def test_2a_api_create_user_successful(self):
         rv = self.app.post('/api/signup/',
                 data=json.dumps(dict(
                 csrf_token='test',
@@ -71,7 +71,7 @@ class ApiTestCase(unittest.TestCase):
         assert data['csrf_token']
 
     # Test that we can't register a user twice
-    def test_2b_api_create_user(self):
+    def test_2b_api_create_user_failure(self):
         rv = self.app.post('/api/signup/',
                 data=json.dumps(dict(
                 csrf_token='test',
@@ -84,7 +84,7 @@ class ApiTestCase(unittest.TestCase):
         assert data['csrf_token']
 
     # Test missing param
-    def test_2c_api_create_user(self):
+    def test_2c_api_create_user_missing_param(self):
         rv = self.app.post('/api/signup/',
                 data=json.dumps(dict(
                 csrf_token='test',
@@ -96,7 +96,7 @@ class ApiTestCase(unittest.TestCase):
         assert data['csrf_token']
 
     # Test login
-    def test_3a_api_login(self):
+    def test_3a_api_login_successful(self):
         rv = self.app.post('/api/login/',
                 data=json.dumps(dict(
                 csrf_token='test',
@@ -109,7 +109,7 @@ class ApiTestCase(unittest.TestCase):
         assert data['csrf_token']
 
     # Test incorrect login
-    def test_3b_api_login(self):
+    def test_3b_api_login_failure(self):
         rv = self.app.post('/api/login/',
                 data=json.dumps(dict(
                 csrf_token='test',
@@ -122,7 +122,7 @@ class ApiTestCase(unittest.TestCase):
         assert data['csrf_token']
 
     # Test missing param
-    def test_3c_api_login(self):
+    def test_3c_api_login_missing_param(self):
         rv = self.app.post('/api/login/',
                 data=json.dumps(dict(
                 csrf_token='test',
@@ -134,7 +134,7 @@ class ApiTestCase(unittest.TestCase):
         assert data['csrf_token']
 
     # Test logout
-    def test_4a_api_logout(self):
+    def test_4a_api_logout_successful(self):
         rv = self.app.post('/api/logout/',
                 data=json.dumps(dict(
                 csrf_token='test')),
