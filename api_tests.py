@@ -108,6 +108,31 @@ class ApiTestCase(unittest.TestCase):
         assert data['status']['code'] is 0
         assert data['csrf_token']
 
+    # Test incorrect login
+    def test_3b_api_login(self):
+        rv = self.app.post('/api/login/',
+                data=json.dumps(dict(
+                csrf_token='test',
+                email='test@example.com',
+                password='wrong')),
+                content_type='application/json')
+
+        data = json.loads(rv.data.decode('UTF-8'))
+        assert data['status']['code'] is 4
+        assert data['csrf_token']
+
+    # Test missing param
+    def test_3c_api_login(self):
+        rv = self.app.post('/api/login/',
+                data=json.dumps(dict(
+                csrf_token='test',
+                password='wrong')),
+                content_type='application/json')
+
+        data = json.loads(rv.data.decode('UTF-8'))
+        assert data['status']['code'] is 3
+        assert data['csrf_token']
+
     # Test logout
     def test_4a_api_login(self):
         rv = self.app.post('/api/logout/',
