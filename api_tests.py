@@ -153,5 +153,21 @@ class ApiTestCase(unittest.TestCase):
         data = json.loads(rv.data.decode('UTF-8'))
         assert data['status']['code'] is 1
 
+    # Test subscribe
+    def test_5a_api_subscribe_successful(self):
+        with self.app.session_transaction() as sess:
+            sess['loggedin'] = True
+            sess['id'] = 1
+
+        rv = self.app.post('/api/subscribe/',
+                data=json.dumps(dict(
+                    csrf_token='test',
+                    url='http://www.sweclockers.com/feeds/nyheter',
+                    name='Sweclockers')),
+                content_type='application/json')
+        data = json.loads(rv.data.decode('UTF-8'))
+        assert data['status']['code'] is 0
+        assert data['feed_id']
+
 if __name__ == '__main__':
     unittest.main()
