@@ -540,6 +540,7 @@ POST.
 ==== Parameters
  * csrf_token
  * url
+ * name
 
 ==== Returned keys
  * csrf_token
@@ -553,7 +554,8 @@ POST.
 [source,sh]
 curl -X POST --data \
 "{\"csrf_token\": \"PZ0R6NM2MM1+AhrBhyRH5odsJlwlDhHwCJ8/xiy4HYOdqmOv\", \
-\"url\": \"http://example.com/feed.rss\"}" http://server/api/subscribe/
+\"url\": \"http://example.com/feed.rss\", \"name\": \Example News\"}" \
+http://server/api/subscribe/
 
 ===== Response
 [source,json --lang-def=./highlight/json.lang --style-file=./highlight/json.style]
