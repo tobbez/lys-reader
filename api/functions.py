@@ -70,6 +70,33 @@ def register_user(email, password, connection):
     return False
 
 @database
+def add_feed(url, connection):
+    cur = connection.cursor()
+    cur.execute('SELECT id FROM lysr_feed WHERE url = %s', (url,))
+    connection.commit()
+
+    if cur.rowcount is 0:
+        cur.execute('INSERT INTO lysr_feed (url) VALUES (%s)', (url,))
+        connection.commit()
+        cur.execute('SELECT id FROM lysr_feed WHERE url = %s', (url,))
+        connection.commit()
+
+    id = cur.fetchone()[0]
+
+    return id
+
+@database
+def subscribe_user(user, feed, name, connection):
+    cur = connection.cursor()
+
+    cur.execute('SELECT id FROM lysr_user_feed WHERE "user" = %s AND feed = %s', (user, feed))
+    connection.commit()
+
+    if cur.rowcount is 0:
+        cur.execute('INSERT INTO lysr_user_feed ("user", feed, name) VALUES (%s, %s, %s)', (user, feed, name))
+        connection.commit()
+
+@database
 def check_user_credentials(email, password, connection):
 
     if is_user_registered(email):

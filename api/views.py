@@ -63,3 +63,23 @@ def api_root():
     response = make_response(jsonify({'csrf_token': session['csrf'], 'status': status}), 200)
     return response
 
+@app.route('/api/subscribe/', methods = ['POST'])
+@require_authentication
+@require_csrf_token
+def api_subscribe(csrf):
+    status = {}
+    httpcode = 200
+    feed = None
+
+    if 'url' in request.json and 'name' in request.json:
+        feed = add_feed(request.json['url'])
+        subscribe_user(session['id'], feed, request.json['name'])
+        status['code'] = 0
+        status['message'] = 'Success'
+    else:
+        status['code'] = 3
+        status['message'] = 'Missing paramter(s)'
+        httpcode = 400
+
+    return make_response(jsonify({ 'csrf_token': csrf, 'feed_id': feed, 'status': status }), httpcode)
+
