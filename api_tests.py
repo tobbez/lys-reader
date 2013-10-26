@@ -61,9 +61,9 @@ class ApiTestCase(unittest.TestCase):
     def test_2a_api_create_user_successful(self):
         rv = self.app.post('/api/signup/',
                 data=json.dumps(dict(
-                csrf_token='test',
-                email='test@example.com',
-                password='test')),
+                    csrf_token='test',
+                    email='test@example.com',
+                    password='test')),
                 content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
@@ -74,9 +74,9 @@ class ApiTestCase(unittest.TestCase):
     def test_2b_api_create_user_failure(self):
         rv = self.app.post('/api/signup/',
                 data=json.dumps(dict(
-                csrf_token='test',
-                email='test@example.com',
-                password='test')),
+                    csrf_token='test',
+                    email='test@example.com',
+                    password='test')),
                 content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
@@ -87,8 +87,8 @@ class ApiTestCase(unittest.TestCase):
     def test_2c_api_create_user_missing_param(self):
         rv = self.app.post('/api/signup/',
                 data=json.dumps(dict(
-                csrf_token='test',
-                email='test@example.com')),
+                    csrf_token='test',
+                    email='test@example.com')),
                 content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
@@ -99,9 +99,9 @@ class ApiTestCase(unittest.TestCase):
     def test_3a_api_login_successful(self):
         rv = self.app.post('/api/login/',
                 data=json.dumps(dict(
-                csrf_token='test',
-                email='test@example.com',
-                password='test')),
+                    csrf_token='test',
+                    email='test@example.com',
+                    password='test')),
                 content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
@@ -112,9 +112,9 @@ class ApiTestCase(unittest.TestCase):
     def test_3b_api_login_failure(self):
         rv = self.app.post('/api/login/',
                 data=json.dumps(dict(
-                csrf_token='test',
-                email='test@example.com',
-                password='wrong')),
+                    csrf_token='test',
+                    email='test@example.com',
+                    password='wrong')),
                 content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
@@ -125,8 +125,8 @@ class ApiTestCase(unittest.TestCase):
     def test_3c_api_login_missing_param(self):
         rv = self.app.post('/api/login/',
                 data=json.dumps(dict(
-                csrf_token='test',
-                password='wrong')),
+                    csrf_token='test',
+                    password='wrong')),
                 content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
@@ -137,7 +137,7 @@ class ApiTestCase(unittest.TestCase):
     def test_4a_api_logout_successful(self):
         rv = self.app.post('/api/logout/',
                 data=json.dumps(dict(
-                csrf_token='test')),
+                    csrf_token='test')),
                 content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
@@ -147,7 +147,7 @@ class ApiTestCase(unittest.TestCase):
     def test_4b_api_logout_failure(self):
         rv = self.app.post('/api/logout/',
                 data=json.dumps(dict(
-                csrf_token='test')),
+                    csrf_token='test')),
                 content_type='application/json')
 
         data = json.loads(rv.data.decode('UTF-8'))
