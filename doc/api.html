@@ -1,8 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="generator" content="AsciiDoc 8.6.6">
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.6" />
 <title>lys-reader API specification</title>
 <style type="text/css">
 /*
@@ -673,8 +674,8 @@ asciidoc.install(2);
 <body class="article">
 <div id="header">
 <h1>lys-reader API specification</h1>
-<span id="author">Torbjörn Lönnemark</span><br>
-<span id="email" class="monospaced">&lt;<a href="mailto:tobbez@ryara.net">tobbez@ryara.net</a>&gt;</span><br>
+<span id="author">Torbjörn Lönnemark</span><br />
+<span id="email"><tt>&lt;<a href="mailto:tobbez@ryara.net">tobbez@ryara.net</a>&gt;</tt></span><br />
 <div id="toc">
   <div id="toctitle">Table of Contents</div>
   <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
@@ -1042,7 +1043,7 @@ http://www.gnu.org/software/src-highlite -->
 <tr>
 <td class="hdlist1">
 id
-<br>
+<br />
 </td>
 <td class="hdlist2">
 <p style="margin-top: 0;">
@@ -1053,7 +1054,7 @@ A comma-separated list of one or more feed IDs. Only fetch entries from the spec
 <tr>
 <td class="hdlist1">
 tag
-<br>
+<br />
 </td>
 <td class="hdlist2">
 <p style="margin-top: 0;">
@@ -1064,7 +1065,7 @@ A comma-separated list of one or more tag names. Only fetch entries from feeds w
 <tr>
 <td class="hdlist1">
 filter
-<br>
+<br />
 </td>
 <td class="hdlist2">
 <p style="margin-top: 0;">
@@ -1075,11 +1076,11 @@ To be decided.
 <tr>
 <td class="hdlist1">
 group
-<br>
+<br />
 </td>
 <td class="hdlist2">
 <p style="margin-top: 0;">
-<span class="monospaced">feed</span>, <span class="monospaced">tag</span>, or <span class="monospaced">none</span>. <span class="monospaced">feed</span> groups the returned entries by feed, and <span class="monospaced">tag</span> groups them by tag. <span class="monospaced">none</span> performs no grouping. The default is none.
+<tt>feed</tt>, <tt>tag</tt>, or <tt>none</tt>. <tt>feed</tt> groups the returned entries by feed, and <tt>tag</tt> groups them by tag. <tt>none</tt> performs no grouping. The default is none.
 </p>
 </td>
 </tr>
@@ -1458,7 +1459,7 @@ http://www.gnu.org/software/src-highlite -->
 <tr>
 <td class="hdlist1">
 entry_id
-<br>
+<br />
 </td>
 <td class="hdlist2">
 <p style="margin-top: 0;">
@@ -1687,7 +1688,7 @@ http://www.lorenzobettini.it
 http://www.gnu.org/software/src-highlite -->
 <pre><tt>curl -X POST --data <span style="color: #990000">\</span>
 <span style="color: #FF0000">"{</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">csrf_token</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">PZ0R6NM2MM1+AhrBhyRH5odsJlwlDhHwCJ8/xiy4HYOdqmOv</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, \</span>
-<span style="color: #CC33CC">\"</span><span style="color: #FF0000">url</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">http://example.com/feed.rss</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">name</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\E</span><span style="color: #FF0000">xample News</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">}"</span> <span style="color: #990000">\</span>
+<span style="color: #CC33CC">\"</span><span style="color: #FF0000">url</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">http://example.com/feed.rss</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">, </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">name</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">: </span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">Example News</span><span style="color: #CC33CC">\"</span><span style="color: #FF0000">}"</span> <span style="color: #990000">\</span>
 http<span style="color: #990000">:</span>//server/api/subscribe<span style="color: #990000">/</span></tt></pre></div></div>
 </div>
 <div class="sect4">
@@ -1847,10 +1848,10 @@ http://www.gnu.org/software/src-highlite -->
 </div>
 </div>
 </div>
-<div id="footnotes"><hr></div>
+<div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2013-10-26 20:15:35 CEST
+Last updated 2013-11-18 15:13:01 CET
 </div>
 </div>
 </body>
