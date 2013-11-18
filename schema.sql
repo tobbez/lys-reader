@@ -22,6 +22,7 @@ CREATE TABLE lysr_user_settings (
 CREATE TABLE lysr_feed (
 	id BIGSERIAL PRIMARY KEY,
 	url TEXT UNIQUE,
+	title TEXT,
 	last_check TIMESTAMP NOT NULL DEFAULT '-infinity',
 	last_update TIMESTAMP NOT NULL DEFAULT '-infinity',
 	update_interval INTERVAL NOT NULL DEFAULT '10m'
