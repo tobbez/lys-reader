@@ -2,7 +2,7 @@ import feedparser
 import configparser
 import logging
 import time
-from backend.common import Database, get_config
+from common import Database, get_config
 
 class FeedHandler():
     def __init__(self):

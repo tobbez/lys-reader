@@ -1,5 +1,5 @@
 import sys
-from backend.feedhandler import FeedHandler
+from feedhandler import FeedHandler
 
 def main(args):
     fh = FeedHandler()
