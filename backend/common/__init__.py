@@ -1,2 +1,2 @@
-from backend.common.config import get_config
-from backend.common.database import Database
+from common.config import get_config
+from common.database import Database

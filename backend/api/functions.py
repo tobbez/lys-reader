@@ -4,8 +4,8 @@ from os import urandom
 from datetime import datetime, timedelta
 from base64 import b64encode
 
-from backend.api import app, db
-from backend.common.database import Database
+from api import app, db
+from common.database import Database
 
 def require_csrf_token(f):
     @wraps(f)

@@ -4,4 +4,4 @@ from flask import Flask
 db = None
 app = Flask(__name__)
 
-import backend.api.views
+import api.views

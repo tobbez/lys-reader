@@ -1,4 +1,4 @@
-from backend.api import app
+from api import app
 #from simplekv.fs import FilesystemStore
 #from flaskext.kvsession import KVSessionExtension
 
