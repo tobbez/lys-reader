@@ -5,9 +5,9 @@ import json
 #from flaskext.kvsession import KVSessionExtension
 from datetime import datetime, timedelta
 
-from api import app, db
-from api.functions import register_user
-from common.database import Database
+from backend.api import app, db
+from backend.api.functions import register_user
+from backend.common.database import Database
 
 class ApiTestCase(unittest.TestCase):
 
@@ -18,8 +18,8 @@ class ApiTestCase(unittest.TestCase):
         #KVSessionExtension(store, app)
         
         # Load the debug config
-        app.config.from_pyfile('../config.defaults.py')
-        app.config.from_pyfile('../config_debug.py')
+        app.config.from_pyfile('../../config.defaults.py')
+        app.config.from_pyfile('../../config_debug.py')
         app.secret_key = app.config['SECRET_KEY']
         db = Database(app.config)
 
