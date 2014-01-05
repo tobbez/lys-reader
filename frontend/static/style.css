@@ -203,13 +203,6 @@ header nav li a:hover {
 	text-align: right;
 }
 
-#add {
-	background-image: url("images/add.svg");
-	background-repeat: no-repeat;
-	background-size: 16px;
-	background-position: 5px 12px;
-}
-
 #options {
 	background-image: url("images/options.svg");
 	background-repeat: no-repeat;
