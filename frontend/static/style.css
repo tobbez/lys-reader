@@ -202,7 +202,8 @@ header nav li a:hover {
 	border-style: none;
 	background-color: #a7a7a7;
 
-	float: left;
+	clear: both;
+	float: none;
 }
 
 .options-menu ul {
