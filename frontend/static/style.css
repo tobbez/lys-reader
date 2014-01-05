@@ -71,7 +71,7 @@ header nav ul li {
 	display: block;
 }
 
-header nav ul li:hover > ul {
+header nav ul li:hover > div {
 	display: block;
 	position: absolute;
     right:0;
@@ -95,48 +95,6 @@ header nav ul li a {
 
 header nav li a:hover {
 	background-color: #fff;
-}
-
-header nav ul ul {
-	background: #fff;
-
-	margin: 0px 20px 0px 0px;
-	padding: 10px 0px;
-
-	width: 100px;
-	height: auto;
-
-	box-shadow: 0px 3px 5px 3px #dadada;
-	border-radius: 5px 0px 5px 5px;
-
-	text-align: center;
-
-	display: none;
-}
-
-header nav ul ul li {
-	width: auto;
-	height: auto;
-
-	margin: 0px;
-	padding: 5px 0px;
-
-	float: none;
-}
-
-header nav ul ul li a {
-	margin: 0px;
-	padding: 0px;
-
-	width: auto;
-	height: auto;
-
-	display: block;
-
-	outline: none;
-
-	color: #000;
-	text-decoration: none;
 }
 
 #main {
@@ -163,6 +121,73 @@ header nav ul ul li a {
 
 	width: 100%;
 	height: auto;
+}
+
+.options-menu {
+	background: #fff;
+
+	margin: 0px 10px 0px 0px;
+	padding: 10px 20px 20px;
+
+	width: auto;
+	height: auto;
+
+	box-shadow: 0px 3px 5px 3px #dadada;
+	border-radius: 5px;
+
+	text-align: left;
+
+	display: none;
+}
+
+.options-menu ul {
+	width: auto;
+	height: auto;
+
+	margin: 0px;
+	padding: 0px;
+}
+
+.options-menu li {
+	width: auto;
+	height: auto;
+
+	margin: 0px;
+	padding: 5px 0px;
+}
+
+.options-menu p {
+	margin: 5px 0px;
+	padding: 0px;
+
+	width: auto;
+	height: auto;
+
+	font-size: 14px;
+	color: #808080;
+}
+
+.options-menu p b {
+	font-size: 16px;
+}
+
+.options-menu a {
+	margin: 0px 20px 0px 0px;
+	padding: 0px;
+
+	width: auto;
+	height: auto;
+
+	outline: none;
+
+	color: #808080;
+	text-align: right;
+	text-decoration: none;
+}
+
+.options-menu li a {
+	color: #0094ff;
+	text-align: right;
 }
 
 #add {
